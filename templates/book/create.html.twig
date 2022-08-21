@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(book_form) }}
+        {{ form_row(book_form.title) }}
+        {{ form_row(book_form.summary) }}
+        <button>Create</button>
+    {{ form_end(book_form) }}
+{% endblock %}
