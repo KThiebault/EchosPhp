@@ -22,7 +22,7 @@ class Book
     #[Column(type: 'uuid', unique: true)]
     #[GeneratedValue(strategy: 'CUSTOM')]
     #[CustomIdGenerator(class: UuidGenerator::class)]
-    private Uuid $id;
+    private Uuid $uuid;
 
     #[Assert\NotBlank]
     #[Column(type: Types::STRING)]
@@ -40,14 +40,14 @@ class Book
         $this->createdAt = new \DateTimeImmutable();
     }
 
-    public function getId(): Uuid
+    public function getUuid(): Uuid
     {
-        return $this->id;
+        return $this->uuid;
     }
 
-    public function setId(Uuid $id): void
+    public function setUuId(Uuid $uuid): void
     {
-        $this->id = $id;
+        $this->uuid = $uuid;
     }
 
     public function getTitle(): string

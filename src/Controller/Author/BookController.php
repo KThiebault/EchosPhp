@@ -37,4 +37,15 @@ final class BookController extends AbstractController
 
         return $this->render('book/create.html.twig', ['book_form' => $bookFrom->createView()]);
     }
+
+    #[Route(
+        path: '/book/update/{uuid}',
+        name: 'app_book_update',
+        requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
+        methods: Request::METHOD_GET
+    )]
+    public function update(string $uuid): Response
+    {
+        return $this->render('book/update.html.twig', ['book' => $this->entityManager->getRepository(Book::class)->find($uuid)]);
+    }
 }

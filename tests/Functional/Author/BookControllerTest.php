@@ -22,7 +22,22 @@ final class BookControllerTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/book');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(10, $crawler->filter('div'));
+        self::assertCount(10, $crawler->filter('a'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldDisplayOneBook(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        $crawler = $client->request(Request::METHOD_GET, '/book/update/'.$book->getUuid());
+
+        self::assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('div'));
+        self::assertSelectorTextSame('div', $book->getTitle());
     }
 
     /**
@@ -40,7 +55,7 @@ final class BookControllerTest extends WebTestCase
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => $bookFormData['book[title]']]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        self::assertInstanceOf(UuidV6::class, $book->getId());
+        self::assertInstanceOf(UuidV6::class, $book->getUuid());
     }
 
     /**
