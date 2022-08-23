@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Author;
 
+use App\Entity\Book;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,7 @@ use Symfony\Component\Uid\UuidV6;
 final class BookControllerTest extends WebTestCase
 {
     /**
+     * @param array<string, string> $bookFormData
      * @dataProvider provideGoodBookData
      */
     public function testCreateBookWithGoodData(array $bookFormData): void
@@ -21,6 +23,7 @@ final class BookControllerTest extends WebTestCase
         $client->request(Request::METHOD_GET, '/book/create');
         $client->submitForm('Create', $bookFormData);
 
+        /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => $bookFormData['book[title]']]);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -28,6 +31,7 @@ final class BookControllerTest extends WebTestCase
     }
 
     /**
+     * @param array<string, string> $bookFormData
      * @dataProvider provideBadBookData
      */
     public function testCreateBookWithBadData(array $bookFormData, string $errorMessage): void
@@ -37,34 +41,40 @@ final class BookControllerTest extends WebTestCase
         $client->submitForm('Create', $bookFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSelectorTextSame('ul > li', $errorMessage);
+        self::assertSelectorTextSame('ul > li', $errorMessage);
     }
 
+    /**
+     * @return \Generator<array<array-key, array<string, string>>>
+     */
     private function provideGoodBookData(): \Generator
     {
         yield [
             [
                 'book[title]' => 'test',
-                'book[summary]' => 'test content with 20 characters minimum.'
-            ]
+                'book[summary]' => 'test content with 20 characters minimum.',
+            ],
         ];
     }
 
+    /**
+     * @return \Generator<array<array-key, array<string, string>|string>>
+     */
     private function provideBadBookData(): \Generator
     {
         yield [
             [
                 'book[title]' => '',
-                'book[summary]' => 'test content with 20 characters minimum.'
+                'book[summary]' => 'test content with 20 characters minimum.',
             ],
-            'This value should not be blank.'
+            'This value should not be blank.',
         ];
         yield [
             [
                 'book[title]' => 'test',
-                'book[summary]' => 'test content.'
+                'book[summary]' => 'test content.',
             ],
-            'This value is too short. It should have 20 characters or more.'
+            'This value is too short. It should have 20 characters or more.',
         ];
     }
 }

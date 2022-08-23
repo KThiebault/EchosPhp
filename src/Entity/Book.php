@@ -11,16 +11,17 @@ use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: BookRepository::class)]
-final class Book
+class Book
 {
     #[Id]
     #[Column(type: 'uuid', unique: true)]
     #[GeneratedValue(strategy: 'CUSTOM')]
-    #[CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[CustomIdGenerator(class: UuidGenerator::class)]
     private Uuid $id;
 
     #[Assert\NotBlank]
