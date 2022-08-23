@@ -14,10 +14,23 @@ use Symfony\Component\Uid\UuidV6;
 final class BookControllerTest extends WebTestCase
 {
     /**
+     * @test
+     */
+    public function shouldDisplayAllBooks(): void
+    {
+        $client = self::createClient();
+        $crawler = $client->request(Request::METHOD_GET, '/book');
+
+        self::assertResponseIsSuccessful();
+        self::assertCount(10, $crawler->filter('div'));
+    }
+
+    /**
      * @param array<string, string> $bookFormData
      * @dataProvider provideGoodBookData
+     * @test
      */
-    public function testCreateBookWithGoodData(array $bookFormData): void
+    public function shouldCreateBook(array $bookFormData): void
     {
         $client = self::createClient();
         $client->request(Request::METHOD_GET, '/book/create');
@@ -33,8 +46,9 @@ final class BookControllerTest extends WebTestCase
     /**
      * @param array<string, string> $bookFormData
      * @dataProvider provideBadBookData
+     * @test
      */
-    public function testCreateBookWithBadData(array $bookFormData, string $errorMessage): void
+    public function shouldNotCreateBookAndDisplayGoodErrorMessage(array $bookFormData, string $errorMessage): void
     {
         $client = self::createClient();
         $client->request(Request::METHOD_GET, '/book/create');
