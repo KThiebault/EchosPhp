@@ -21,7 +21,9 @@ final class BookController extends AbstractController
     #[Route(path: '/book', name: 'app_book_index', methods: Request::METHOD_GET)]
     public function index(): Response
     {
-        return $this->render('book/index.html.twig', ['books' => $this->entityManager->getRepository(Book::class)->findAll()]);
+        return $this->render('author/book/index.html.twig', [
+            'books' => $this->entityManager->getRepository(Book::class)->findAll(),
+        ]);
     }
 
     #[Route(path: '/book/create', name: 'app_book_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
@@ -35,17 +37,31 @@ final class BookController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->render('book/create.html.twig', ['book_form' => $bookFrom->createView()]);
+        return $this->render('author/book/create.html.twig', ['book_form' => $bookFrom->createView()]);
     }
 
     #[Route(
         path: '/book/update/{uuid}',
         name: 'app_book_update',
         requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
-        methods: Request::METHOD_GET
+        methods: [Request::METHOD_GET, Request::METHOD_POST]
     )]
-    public function update(string $uuid): Response
+    public function update(string $uuid, Request $request): Response
     {
-        return $this->render('book/update.html.twig', ['book' => $this->entityManager->getRepository(Book::class)->find($uuid)]);
+        $book = $this->entityManager->getRepository(Book::class)->find($uuid);
+
+        if (null === $book) {
+            throw $this->createNotFoundException();
+        }
+
+        $bookFrom = $this->createForm(BookType::class, $book)->handleRequest($request);
+
+        if ($bookFrom->isSubmitted() && $bookFrom->isValid()) {
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_book_update', ['uuid' => $uuid]);
+        }
+
+        return $this->render('author/book/update.html.twig', ['book_form' => $bookFrom->createView()]);
     }
 }

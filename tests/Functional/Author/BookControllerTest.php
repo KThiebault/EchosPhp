@@ -9,6 +9,7 @@ use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Uid\UuidV6;
 
 final class BookControllerTest extends WebTestCase
@@ -28,16 +29,30 @@ final class BookControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function shouldDisplayOneBook(): void
+    public function shouldThrowNotFoundExceptionIfBookIsNotFound(): void
+    {
+        $client = self::createClient();
+        $client->catchExceptions(false);
+
+        self::expectException(NotFoundHttpException::class);
+        $client->request(Request::METHOD_GET, '/book/update/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b');
+    }
+
+    /**
+     * @param array<string, string> $updateBookFormData
+     * @dataProvider provideGoodUpdatedBookData
+     * @test
+     */
+    public function shouldUpdateBook(array $updateBookFormData): void
     {
         $client = self::createClient();
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        $crawler = $client->request(Request::METHOD_GET, '/book/update/'.$book->getUuid());
+        $client->request(Request::METHOD_GET, '/book/update/'.$book->getUuid());
+        $client->submitForm('Update', $updateBookFormData);
 
-        self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('div'));
-        self::assertSelectorTextSame('div', $book->getTitle());
+        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        self::assertNotSame($updateBookFormData['book[title]'], $book->getTitle());
     }
 
     /**
@@ -77,6 +92,19 @@ final class BookControllerTest extends WebTestCase
      * @return \Generator<array<array-key, array<string, string>>>
      */
     private function provideGoodBookData(): \Generator
+    {
+        yield [
+            [
+                'book[title]' => 'test',
+                'book[summary]' => 'test content with 20 characters minimum.',
+            ],
+        ];
+    }
+
+    /**
+     * @return \Generator<array<array-key, array<string, string>>>
+     */
+    private function provideGoodUpdatedBookData(): \Generator
     {
         yield [
             [
