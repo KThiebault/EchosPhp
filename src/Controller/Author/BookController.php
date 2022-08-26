@@ -78,6 +78,11 @@ final class BookController extends AbstractController
         }
 
         $book = $this->entityManager->getRepository(Book::class)->find($uuid);
+
+        if (null === $book) {
+            throw $this->createNotFoundException();
+        }
+
         $this->entityManager->remove($book);
         $this->entityManager->flush();
 
