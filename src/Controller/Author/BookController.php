@@ -64,4 +64,23 @@ final class BookController extends AbstractController
 
         return $this->render('author/book/update.html.twig', ['book_form' => $bookFrom->createView()]);
     }
+
+    #[Route(
+        path: '/book/delete/{uuid}',
+        name: 'app_book_delete',
+        requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
+        methods: Request::METHOD_POST
+    )]
+    public function delete(string $uuid, Request $request): Response
+    {
+        if (false === $this->isCsrfTokenValid('delete' . $uuid, $request->request->get('csrf_token'))) {
+            return $this->redirectToRoute('app_book_index');
+        }
+
+        $book = $this->entityManager->getRepository(Book::class)->find($uuid);
+        $this->entityManager->remove($book);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_book_index');
+    }
 }

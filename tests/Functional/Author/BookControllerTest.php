@@ -89,6 +89,19 @@ final class BookControllerTest extends WebTestCase
     }
 
     /**
+     * @test
+     */
+    public function shouldDeleteBook(): void
+    {
+        $client = self::createClient();
+        $client->request(Request::METHOD_GET, '/book');
+        $client->submitForm('Delete');
+        $crawler = $client->followRedirect();
+
+        self::assertCount(9, $crawler->filter('a'));
+    }
+
+    /**
      * @return \Generator<array<array-key, array<string, string>>>
      */
     private function provideGoodBookData(): \Generator
