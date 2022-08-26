@@ -73,7 +73,7 @@ final class BookController extends AbstractController
     )]
     public function delete(string $uuid, Request $request): Response
     {
-        if (false === $this->isCsrfTokenValid('delete' . $uuid, $request->request->get('csrf_token'))) {
+        if (false === $this->isCsrfTokenValid('delete'.$uuid, (string)$request->request->get('csrf_token'))) {
             return $this->redirectToRoute('app_book_index');
         }
 
