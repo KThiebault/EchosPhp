@@ -104,7 +104,7 @@ final class BookControllerTest extends WebTestCase
     /**
      * @return \Generator<array<array-key, array<string, string>>>
      */
-    private function provideGoodBookData(): \Generator
+    public function provideGoodBookData(): \Generator
     {
         yield [
             [
@@ -117,7 +117,7 @@ final class BookControllerTest extends WebTestCase
     /**
      * @return \Generator<array<array-key, array<string, string>>>
      */
-    private function provideGoodUpdatedBookData(): \Generator
+    public function provideGoodUpdatedBookData(): \Generator
     {
         yield [
             [
@@ -130,7 +130,7 @@ final class BookControllerTest extends WebTestCase
     /**
      * @return \Generator<array<array-key, array<string, string>|string>>
      */
-    private function provideBadBookData(): \Generator
+    public function provideBadBookData(): \Generator
     {
         yield [
             [
