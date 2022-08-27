@@ -20,33 +20,33 @@ final class ChapterController extends AbstractController
     }
 
     #[Route(
-        path: '/{uuid}/chapter',
+        path: '/{book_uuid}/chapter',
         name: 'app_chapter_index',
-        requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
+        requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: Request::METHOD_GET
     )]
-    public function index(string $uuid): Response
+    public function index(string $book_uuid): Response
     {
-        $book = $this->entityManager->getRepository(Book::class)->find($uuid);
+        $book = $this->entityManager->getRepository(Book::class)->find($book_uuid);
 
         if (null === $book) {
             throw $this->createNotFoundException();
         }
 
         return $this->render('author/chapter/index.html.twig', [
-            'chapters' => $this->entityManager->getRepository(Chapter::class)->findBy(['book' => $uuid]),
+            'chapters' => $this->entityManager->getRepository(Chapter::class)->findBy(['book' => $book_uuid]),
         ]);
     }
 
     #[Route(
-        path: '/{uuid}/chapter/create',
+        path: '/{book_uuid}/chapter/create',
         name: 'app_chapter_create',
-        requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
+        requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: [Request::METHOD_GET, Request::METHOD_POST]
     )]
-    public function create(string $uuid, Request $request): Response
+    public function create(string $book_uuid, Request $request): Response
     {
-        $book = $this->entityManager->getRepository(Book::class)->find($uuid);
+        $book = $this->entityManager->getRepository(Book::class)->find($book_uuid);
 
         if (null === $book) {
             throw $this->createNotFoundException();
@@ -59,8 +59,44 @@ final class ChapterController extends AbstractController
             $chapter->setBook($book);
             $this->entityManager->persist($chapter);
             $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_chapter_index', [
+                'book_uuid' => $book->getUuid(),
+            ]);
         }
 
         return $this->render('author/chapter/create.html.twig', ['chapter_form' => $chapterFrom->createView()]);
+    }
+
+    #[Route(
+        path: '/{book_uuid}/chapter/update/{chapter_uuid}',
+        name: 'app_chapter_update',
+        requirements: [
+            'book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
+            'chapter_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
+        ],
+        methods: [Request::METHOD_GET, Request::METHOD_POST]
+    )]
+    public function update(string $book_uuid, string $chapter_uuid, Request $request): Response
+    {
+        $book = $this->entityManager->getRepository(Book::class)->find($book_uuid);
+        $chapter = $this->entityManager->getRepository(Chapter::class)->find($chapter_uuid);
+
+        if (null === $book || null === $chapter) {
+            throw $this->createNotFoundException();
+        }
+
+        $chapterFrom = $this->createForm(ChapterType::class, $chapter)->handleRequest($request);
+
+        if ($chapterFrom->isSubmitted() && $chapterFrom->isValid()) {
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_chapter_update', [
+                'book_uuid' => $book->getUuid(),
+                'chapter_uuid' => $chapter->getUuid(),
+            ]);
+        }
+
+        return $this->render('author/chapter/update.html.twig', ['chapter_form' => $chapterFrom->createView()]);
     }
 }

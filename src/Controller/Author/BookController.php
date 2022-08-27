@@ -35,6 +35,8 @@ final class BookController extends AbstractController
         if ($bookFrom->isSubmitted() && $bookFrom->isValid()) {
             $this->entityManager->persist($book);
             $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_book_index');
         }
 
         return $this->render('author/book/create.html.twig', ['book_form' => $bookFrom->createView()]);

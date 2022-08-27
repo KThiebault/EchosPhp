@@ -50,8 +50,28 @@ final class ChapterControllerTest extends WebTestCase
             'title' => $chapterFormData['chapter[title]'],
         ]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
         self::assertInstanceOf(UuidV6::class, $chapter->getUuid());
+    }
+
+    /**
+     * @param array<string, string> $updateChapterFormData
+     * @dataProvider provideGoodUpdatedBookData
+     * @test
+     */
+    public function shouldUpdateChapter(array $updateChapterFormData): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        /** @var Chapter $chapter */
+        $chapter = self::getContainer()->get(ChapterRepository::class)->findOneBy(['title' => 'Chapter 1']);
+
+        $client->request(Request::METHOD_GET, $book->getUuid().'/chapter/update/'.$chapter->getUuid());
+        $client->submitForm('Update', $updateChapterFormData);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        self::assertNotSame($updateChapterFormData['chapter[title]'], $book->getTitle());
     }
 
     /**
@@ -73,7 +93,17 @@ final class ChapterControllerTest extends WebTestCase
     public function provideGoodChapterData(): \Generator
     {
         yield [
-            ['chapter[title]' => 'test'],
+            ['chapter[title]' => 'Chapter 10'],
+        ];
+    }
+
+    /**
+     * @return \Generator<array<array-key, array<string, string>>>
+     */
+    public function provideGoodUpdatedBookData(): \Generator
+    {
+        yield [
+            ['chapter[title]' => 'Chapter'],
         ];
     }
 

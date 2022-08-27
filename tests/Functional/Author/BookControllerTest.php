@@ -69,7 +69,7 @@ final class BookControllerTest extends WebTestCase
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => $bookFormData['book[title]']]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
         self::assertInstanceOf(UuidV6::class, $book->getUuid());
     }
 
