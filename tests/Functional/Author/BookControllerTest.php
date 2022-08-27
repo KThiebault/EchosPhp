@@ -81,10 +81,14 @@ final class BookControllerTest extends WebTestCase
     public function shouldNotCreateBookAndDisplayGoodErrorMessage(array $bookFormData, string $errorMessage): void
     {
         $client = self::createClient();
+        $bookRepository = self::getContainer()->get(BookRepository::class);
+        $countBook = count($bookRepository->findAll());
+
         $client->request(Request::METHOD_GET, '/book/create');
         $client->submitForm('Create', $bookFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertCount($countBook, $bookRepository->findAll());
         self::assertSelectorTextSame('ul > li', $errorMessage);
     }
 
