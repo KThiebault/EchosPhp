@@ -25,14 +25,14 @@ class Book
     private Uuid $uuid;
 
     #[Assert\NotBlank]
-    #[Column(type: Types::STRING)]
+    #[Column(type: Types::STRING, nullable: false)]
     private string $title;
 
     #[Assert\Length(min: 20)]
-    #[Column(type: Types::TEXT)]
+    #[Column(type: Types::TEXT, nullable: false)]
     private string $summary;
 
-    #[Column(type: Types::DATE_IMMUTABLE)]
+    #[Column(type: Types::DATE_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
 
     public function __construct()
