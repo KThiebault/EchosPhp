@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for chapter in chapters %}
+        <div>{{ chapter.title }}</div>
+    {% endfor %}
+{% endblock %}
