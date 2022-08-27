@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\ChapterRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\PageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\CustomIdGenerator;
@@ -15,13 +13,11 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Validator\Constraints as Assert;
 
-#[Entity(repositoryClass: ChapterRepository::class)]
-class Chapter
+#[Entity(repositoryClass: PageRepository::class)]
+class Page
 {
     #[Id]
     #[Column(type: 'uuid', unique: true)]
@@ -29,26 +25,18 @@ class Chapter
     #[CustomIdGenerator(class: UuidGenerator::class)]
     private Uuid $uuid;
 
-    #[ManyToOne(targetEntity: Book::class)]
+    #[ManyToOne(targetEntity: Chapter::class, inversedBy: 'pages')]
     #[JoinColumn(referencedColumnName: 'uuid', nullable: false, onDelete: 'cascade')]
-    private Book $book;
+    private Chapter $chapter;
 
-    /**
-     * @var Collection<int, Page>
-     */
-    #[OneToMany(mappedBy: 'chapter', targetEntity: Page::class)]
-    private Collection $pages;
-
-    #[Assert\NotBlank]
-    #[Column(type: Types::STRING, nullable: false)]
-    private string $title;
+    #[Column(type: Types::TEXT)]
+    private string $content;
 
     #[Column(type: Types::DATE_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
 
     public function __construct()
     {
-        $this->pages = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -62,40 +50,24 @@ class Chapter
         $this->uuid = $uuid;
     }
 
-    public function getBook(): Book
+    public function getChapter(): Chapter
     {
-        return $this->book;
+        return $this->chapter;
     }
 
-    public function setBook(Book $book): void
+    public function setChapter(Chapter $chapter): void
     {
-        $this->book = $book;
+        $this->chapter = $chapter;
     }
 
-    /**
-     * @return Collection<int, Page>
-     */
-    public function getPages(): Collection
+    public function getContent(): string
     {
-        return $this->pages;
+        return $this->content;
     }
 
-    /**
-     * @param Collection<int, Page> $pages
-     */
-    public function setPages(Collection $pages): void
+    public function setContent(string $content): void
     {
-        $this->pages = $pages;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
+        $this->content = $content;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
