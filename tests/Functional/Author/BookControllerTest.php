@@ -69,7 +69,7 @@ final class BookControllerTest extends WebTestCase
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => $bookFormData['book[title]']]);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
         self::assertInstanceOf(UuidV6::class, $book->getUuid());
     }
 
@@ -81,10 +81,14 @@ final class BookControllerTest extends WebTestCase
     public function shouldNotCreateBookAndDisplayGoodErrorMessage(array $bookFormData, string $errorMessage): void
     {
         $client = self::createClient();
+        $bookRepository = self::getContainer()->get(BookRepository::class);
+        $countBook = count($bookRepository->findAll());
+
         $client->request(Request::METHOD_GET, '/book/create');
         $client->submitForm('Create', $bookFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertCount($countBook, $bookRepository->findAll());
         self::assertSelectorTextSame('ul > li', $errorMessage);
     }
 

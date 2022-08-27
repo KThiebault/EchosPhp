@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(chapter_form) }}
+        {{ form_row(chapter_form.title) }}
+        <button>Update</button>
+    {{ form_end(chapter_form) }}
+{% endblock %}

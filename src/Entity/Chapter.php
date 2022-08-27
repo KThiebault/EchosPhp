@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: ChapterRepository::class)]
 class Chapter
@@ -29,6 +30,7 @@ class Chapter
     #[JoinColumn(referencedColumnName: 'uuid', nullable: false, onDelete: 'cascade')]
     private Book $book;
 
+    #[Assert\NotBlank]
     #[Column(type: Types::STRING)]
     private string $title;
 
