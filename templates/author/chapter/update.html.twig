@@ -3,6 +3,9 @@
 {% block body %}
     {{ form_start(chapter_form) }}
         {{ form_row(chapter_form.title) }}
+        {% for form_page in chapter_form.pages %}
+            {{ form_row(form_page) }}
+        {% endfor %}
         <button>Update</button>
     {{ form_end(chapter_form) }}
 {% endblock %}

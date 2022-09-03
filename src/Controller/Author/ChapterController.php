@@ -6,9 +6,11 @@ namespace App\Controller\Author;
 
 use App\Entity\Book;
 use App\Entity\Chapter;
+use App\Entity\Page;
 use App\Form\ChapterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +22,7 @@ final class ChapterController extends AbstractController
     }
 
     #[Route(
-        path: '/{book_uuid}/chapter',
+        path: 'book/{book_uuid}/chapter',
         name: 'app_chapter_index',
         requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: Request::METHOD_GET
@@ -34,12 +36,13 @@ final class ChapterController extends AbstractController
         }
 
         return $this->render('author/chapter/index.html.twig', [
+            'book_uuid' => $book->getUuid(),
             'chapters' => $this->entityManager->getRepository(Chapter::class)->findBy(['book' => $book_uuid]),
         ]);
     }
 
     #[Route(
-        path: '/{book_uuid}/chapter/create',
+        path: 'book/{book_uuid}/chapter/create',
         name: 'app_chapter_create',
         requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: [Request::METHOD_GET, Request::METHOD_POST]
@@ -69,7 +72,7 @@ final class ChapterController extends AbstractController
     }
 
     #[Route(
-        path: '/{book_uuid}/chapter/update/{chapter_uuid}',
+        path: 'book/{book_uuid}/chapter/update/{chapter_uuid}',
         name: 'app_chapter_update',
         requirements: [
             'book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
@@ -85,10 +88,15 @@ final class ChapterController extends AbstractController
         if (null === $book || null === $chapter) {
             throw $this->createNotFoundException();
         }
-
         $chapterFrom = $this->createForm(ChapterType::class, $chapter)->handleRequest($request);
 
         if ($chapterFrom->isSubmitted() && $chapterFrom->isValid()) {
+            /** @var ClickableInterface $addPageBtn */
+            $addPageBtn = $chapterFrom->get('addPage');
+            if ($addPageBtn->isClicked()) {
+                $chapter->addPage(new Page());
+            }
+
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_chapter_update', [

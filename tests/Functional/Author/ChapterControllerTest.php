@@ -25,10 +25,10 @@ final class ChapterControllerTest extends WebTestCase
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
         $chapters = self::getContainer()->get(ChapterRepository::class)->findBy(['book' => $book->getUuid()]);
-        $crawler = $client->request(Request::METHOD_GET, $book->getUuid().'/chapter');
+        $crawler = $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(count($chapters), $crawler->filter('div'));
+        self::assertCount(count($chapters), $crawler->filter('a'));
     }
 
     /**
@@ -41,7 +41,7 @@ final class ChapterControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        $client->request(Request::METHOD_GET, $book->getUuid().'/chapter/create');
+        $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/create');
         $client->submitForm('Create', $chapterFormData);
 
         /** @var Chapter $chapter */
@@ -67,11 +67,37 @@ final class ChapterControllerTest extends WebTestCase
         /** @var Chapter $chapter */
         $chapter = self::getContainer()->get(ChapterRepository::class)->findOneBy(['title' => 'Chapter 1']);
 
-        $client->request(Request::METHOD_GET, $book->getUuid().'/chapter/update/'.$chapter->getUuid());
+        $crawler = $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/update/'.$chapter->getUuid());
+
         $client->submitForm('Update', $updateChapterFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        self::assertCount(count($chapter->getPages()), $crawler->filter('textarea'));
         self::assertNotSame($updateChapterFormData['chapter[title]'], $book->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateAPage(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        $chapterRepository = self::getContainer()->get(ChapterRepository::class);
+
+        /** @var Chapter $chapter */
+        $chapter = $chapterRepository->findOneBy(['title' => 'Chapter 1']);
+        $actualPages = count($chapter->getPages()) + 1;
+
+        $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/update/'.$chapter->getUuid());
+        $client->submitForm('Add Page');
+
+        /** @var Chapter $chapter */
+        $chapter = $chapterRepository->findOneBy(['title' => 'Chapter 1']);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        self::assertCount($actualPages, $chapter->getPages());
     }
 
     /**
@@ -87,7 +113,7 @@ final class ChapterControllerTest extends WebTestCase
         $chapterRepository = self::getContainer()->get(ChapterRepository::class);
         $countChapter = count($chapterRepository->findBy(['book' => $book->getUuid()]));
 
-        $client->request(Request::METHOD_GET, $book->getUuid().'/chapter/create');
+        $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/create');
         $client->submitForm('Create', $chapterFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);

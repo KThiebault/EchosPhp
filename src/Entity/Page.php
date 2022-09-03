@@ -29,8 +29,8 @@ class Page
     #[JoinColumn(referencedColumnName: 'uuid', nullable: false, onDelete: 'cascade')]
     private Chapter $chapter;
 
-    #[Column(type: Types::TEXT)]
-    private string $content;
+    #[Column(type: Types::TEXT, nullable: true)]
+    private ?string $content;
 
     #[Column(type: Types::DATE_IMMUTABLE, nullable: false)]
     private \DateTimeImmutable $createdAt;
@@ -60,7 +60,7 @@ class Page
         $this->chapter = $chapter;
     }
 
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }

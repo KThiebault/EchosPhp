@@ -21,7 +21,7 @@ final class PageFixture extends Fixture implements DependentFixtureInterface
                 $page = new Page();
                 $page->setContent(sprintf('A very long content for page number %d', $index));
                 $page->setChapter($chapter);
-                $manager->persist($chapter);
+                $manager->persist($page);
             }
         }
 
