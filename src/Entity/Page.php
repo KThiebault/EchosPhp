@@ -32,7 +32,7 @@ class Page
     #[Column(type: Types::TEXT, nullable: true)]
     private ?string $content;
 
-    #[Column(type: Types::DATE_IMMUTABLE, nullable: false)]
+    #[Column(type: Types::DATE_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
     public function __construct()

@@ -40,10 +40,10 @@ class Chapter
     private Collection $pages;
 
     #[Assert\NotBlank]
-    #[Column(type: Types::STRING, nullable: false)]
+    #[Column(type: Types::STRING)]
     private string $title;
 
-    #[Column(type: Types::DATE_IMMUTABLE, nullable: false)]
+    #[Column(type: Types::DATE_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
     public function __construct()

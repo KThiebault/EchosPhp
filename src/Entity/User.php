@@ -17,6 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[Table(name: 'users')]
 #[UniqueEntity('email')]
@@ -30,10 +31,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[CustomIdGenerator(class: UuidGenerator::class)]
     private Uuid $uuid;
 
-    #[Column(type: Types::STRING)]
+    #[Assert\Email]
+    #[Assert\NotBlank]
+    #[Column(type: Types::STRING, length: 255, unique: true)]
     private string $email;
 
-    #[Column(type: Types::STRING)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 150)]
+    #[Column(type: Types::STRING, length: 150, unique: true)]
     private string $pseudo;
 
     #[Column(type: Types::STRING)]
