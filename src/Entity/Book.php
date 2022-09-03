@@ -45,11 +45,6 @@ class Book
         return $this->uuid;
     }
 
-    public function setUuId(Uuid $uuid): void
-    {
-        $this->uuid = $uuid;
-    }
-
     public function getTitle(): string
     {
         return $this->title;
