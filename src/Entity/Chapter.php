@@ -36,7 +36,7 @@ class Chapter
     /**
      * @var Collection<int, Page>
      */
-    #[OneToMany(mappedBy: 'chapter', targetEntity: Page::class)]
+    #[OneToMany(mappedBy: 'chapter', targetEntity: Page::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $pages;
 
     #[Assert\NotBlank]
@@ -86,6 +86,21 @@ class Chapter
     public function setPages(Collection $pages): void
     {
         $this->pages = $pages;
+    }
+
+    public function addPage(Page $page): void
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages[] = $page;
+            $page->setChapter($this);
+        }
+    }
+
+    public function removePage(Page $page): void
+    {
+        if ($this->pages->contains($page)) {
+            $this->pages->removeElement($page);
+        }
     }
 
     public function getTitle(): string
