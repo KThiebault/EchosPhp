@@ -3,5 +3,9 @@
 {% block body %}
     {% for chapter in chapters %}
         <a href="{{ path('app_chapter_update', {'book_uuid': book_uuid, 'chapter_uuid': chapter.uuid}) }}">{{ chapter.title }}</a>
+        <form action="{{ url('app_chapter_delete', {'book_uuid': book_uuid, 'chapter_uuid': chapter.uuid}) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ chapter.uuid) }}" />
+            <button>Delete</button>
+        </form>
     {% endfor %}
 {% endblock %}
