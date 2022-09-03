@@ -45,11 +45,6 @@ class Page
         return $this->uuid;
     }
 
-    public function setUuid(Uuid $uuid): void
-    {
-        $this->uuid = $uuid;
-    }
-
     public function getChapter(): Chapter
     {
         return $this->chapter;
