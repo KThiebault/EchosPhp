@@ -9,6 +9,7 @@ use App\Repository\BookRepository;
 use App\Repository\ChapterRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class BookControllerTest extends WebTestCase
 {
@@ -38,5 +39,17 @@ final class BookControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertCount($chapterCount, $crawler->filter('a'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldThrowNotFoundExceptionIfBookIsNotFound(): void
+    {
+        $client = self::createClient();
+        $client->catchExceptions(false);
+
+        self::expectException(NotFoundHttpException::class);
+        $client->request(Request::METHOD_GET, '/book/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b');
     }
 }
