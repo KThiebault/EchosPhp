@@ -2,6 +2,6 @@
 
 {% block body %}
     {% for book in books %}
-        <div>{{ book.title }}</div>
+        <a href="{{ path('app_book_show', {uuid: book.uuid}) }}">{{ book.title }}</a>
     {% endfor %}
 {% endblock %}
