@@ -18,7 +18,7 @@ final class BookController extends AbstractController
     {
     }
 
-    #[Route(path: '/book', name: 'app_book_index', methods: Request::METHOD_GET)]
+    #[Route(path: '/author/book', name: 'app_author_book_index', methods: Request::METHOD_GET)]
     public function index(): Response
     {
         return $this->render('author/book/index.html.twig', [
@@ -26,7 +26,7 @@ final class BookController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/book/create', name: 'app_book_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+    #[Route(path: '/author/book/create', name: 'app_author_book_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function create(Request $request): Response
     {
         $book = new Book();
@@ -36,15 +36,15 @@ final class BookController extends AbstractController
             $this->entityManager->persist($book);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_book_index');
+            return $this->redirectToRoute('app_author_book_index');
         }
 
         return $this->render('author/book/create.html.twig', ['book_form' => $bookFrom->createView()]);
     }
 
     #[Route(
-        path: '/book/update/{uuid}',
-        name: 'app_book_update',
+        path: '/author/book/update/{uuid}',
+        name: 'app_author_book_update',
         requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: [Request::METHOD_GET, Request::METHOD_POST]
     )]
@@ -61,22 +61,22 @@ final class BookController extends AbstractController
         if ($bookFrom->isSubmitted() && $bookFrom->isValid()) {
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_book_update', ['uuid' => $uuid]);
+            return $this->redirectToRoute('app_author_book_update', ['uuid' => $uuid]);
         }
 
         return $this->render('author/book/update.html.twig', ['book_form' => $bookFrom->createView()]);
     }
 
     #[Route(
-        path: '/book/delete/{uuid}',
-        name: 'app_book_delete',
+        path: '/author/book/delete/{uuid}',
+        name: 'app_author_book_delete',
         requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: Request::METHOD_POST
     )]
     public function delete(string $uuid, Request $request): Response
     {
         if (false === $this->isCsrfTokenValid('delete'.$uuid, (string) $request->request->get('csrf_token'))) {
-            return $this->redirectToRoute('app_book_index');
+            return $this->redirectToRoute('app_author_book_index');
         }
 
         $book = $this->entityManager->getRepository(Book::class)->find($uuid);
@@ -88,6 +88,6 @@ final class BookController extends AbstractController
         $this->entityManager->remove($book);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_book_index');
+        return $this->redirectToRoute('app_author_book_index');
     }
 }

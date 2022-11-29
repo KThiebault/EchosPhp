@@ -12,7 +12,7 @@ final class BookFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        for ($index = 1; $index <= 10; ++$index) {
+        for ($index = 1; $index <= 12; ++$index) {
             $book = new Book();
             $book->setTitle(sprintf('Title fixture %d', $index));
             $book->setSummary(sprintf('Content fixture %s, with minimum 20 characters', $index));

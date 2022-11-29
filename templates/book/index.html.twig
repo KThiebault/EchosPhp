@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for book in books %}
+        <a href="{{ path('app_book_show', {book_uuid: book.uuid}) }}">{{ book.title }}</a>
+    {% endfor %}
+{% endblock %}

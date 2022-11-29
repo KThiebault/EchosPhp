@@ -20,10 +20,10 @@ final class BookControllerTest extends WebTestCase
     public function shouldDisplayAllBooks(): void
     {
         $client = self::createClient();
-        $crawler = $client->request(Request::METHOD_GET, '/book');
+        $crawler = $client->request(Request::METHOD_GET, '/author/book');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(10, $crawler->filter('a'));
+        self::assertCount(12, $crawler->filter('a'));
     }
 
     /**
@@ -35,7 +35,7 @@ final class BookControllerTest extends WebTestCase
         $client->catchExceptions(false);
 
         self::expectException(NotFoundHttpException::class);
-        $client->request(Request::METHOD_GET, '/book/update/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b');
+        $client->request(Request::METHOD_GET, '/author/book/update/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b');
     }
 
     /**
@@ -48,7 +48,7 @@ final class BookControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        $client->request(Request::METHOD_GET, '/book/update/'.$book->getUuid());
+        $client->request(Request::METHOD_GET, '/author/book/update/'.$book->getUuid());
         $client->submitForm('Update', $updateBookFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
@@ -63,7 +63,7 @@ final class BookControllerTest extends WebTestCase
     public function shouldCreateBook(array $bookFormData): void
     {
         $client = self::createClient();
-        $client->request(Request::METHOD_GET, '/book/create');
+        $client->request(Request::METHOD_GET, '/author/book/create');
         $client->submitForm('Create', $bookFormData);
 
         /** @var Book $book */
@@ -84,7 +84,7 @@ final class BookControllerTest extends WebTestCase
         $bookRepository = self::getContainer()->get(BookRepository::class);
         $countBook = count($bookRepository->findAll());
 
-        $client->request(Request::METHOD_GET, '/book/create');
+        $client->request(Request::METHOD_GET, '/author/book/create');
         $client->submitForm('Create', $bookFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
@@ -98,11 +98,13 @@ final class BookControllerTest extends WebTestCase
     public function shouldDeleteBook(): void
     {
         $client = self::createClient();
-        $client->request(Request::METHOD_GET, '/book');
+        $countBook = count(self::getContainer()->get(BookRepository::class)->findAll());
+
+        $client->request(Request::METHOD_GET, '/author/book');
         $client->submitForm('Delete');
         $crawler = $client->followRedirect();
 
-        self::assertCount(9, $crawler->filter('a'));
+        self::assertCount($countBook - 1, $crawler->filter('a'));
     }
 
     /**
