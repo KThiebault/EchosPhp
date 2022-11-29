@@ -2,6 +2,6 @@
 
 {% block body %}
     {% for chapter in chapters %}
-        <a href="">{{ chapter.title }}</a>
+        <a href="{{ path('app_book_read', {book_uuid: book.uuid, chapter_uuid: chapter.uuid}) }}">{{ chapter.title }}</a>
     {% endfor %}
 {% endblock %}

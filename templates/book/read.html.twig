@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for page in pages %}
+        <div>{{ page.content }}</div>
+    {% endfor %}
+{% endblock %}
