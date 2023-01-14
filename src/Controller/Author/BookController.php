@@ -12,13 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/author')]
 final class BookController extends AbstractController
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 
-    #[Route(path: '/author/book', name: 'app_author_book_index', methods: Request::METHOD_GET)]
+    #[Route(path: '/book', name: 'app_author_book_index', methods: Request::METHOD_GET)]
     public function index(): Response
     {
         return $this->render('author/book/index.html.twig', [
@@ -26,7 +27,7 @@ final class BookController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/author/book/create', name: 'app_author_book_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+    #[Route(path: '/book/create', name: 'app_author_book_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function create(Request $request): Response
     {
         $book = new Book();
@@ -39,11 +40,11 @@ final class BookController extends AbstractController
             return $this->redirectToRoute('app_author_book_index');
         }
 
-        return $this->render('author/book/create.html.twig', ['book_form' => $bookFrom->createView()]);
+        return $this->render('author/book/create.html.twig', ['book_form' => $bookFrom]);
     }
 
     #[Route(
-        path: '/author/book/update/{uuid}',
+        path: '/book/update/{uuid}',
         name: 'app_author_book_update',
         requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: [Request::METHOD_GET, Request::METHOD_POST]
@@ -64,11 +65,11 @@ final class BookController extends AbstractController
             return $this->redirectToRoute('app_author_book_update', ['uuid' => $uuid]);
         }
 
-        return $this->render('author/book/update.html.twig', ['book_form' => $bookFrom->createView()]);
+        return $this->render('author/book/update.html.twig', ['book_form' => $bookFrom]);
     }
 
     #[Route(
-        path: '/author/book/delete/{uuid}',
+        path: '/book/delete/{uuid}',
         name: 'app_author_book_delete',
         requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: Request::METHOD_POST

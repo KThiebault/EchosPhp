@@ -13,7 +13,7 @@ ARG STABILITY="stable"
 ENV STABILITY ${STABILITY}
 
 # Allow to select Symfony version
-ARG SYMFONY_VERSION=""
+ARG SYMFONY_VERSION="6.2"
 ENV SYMFONY_VERSION ${SYMFONY_VERSION}
 
 ENV APP_ENV=prod
@@ -129,7 +129,9 @@ RUN rm $PHP_INI_DIR/conf.d/app.prod.ini; \
 COPY docker/php/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
 RUN set -eux; \
-	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+    apk add --no-cache \
+      linux-headers \
+	  --virtual .build-deps $PHPIZE_DEPS; \
 	pecl install xdebug; \
 	docker-php-ext-enable xdebug; \
 	apk del .build-deps

@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form_start(chapter_form) }}
-        {{ form_row(chapter_form.title) }}
-        <button>Create</button>
-    {{ form_end(chapter_form) }}
+    <div class="container max-w-screen-lg mx-auto">
+        {% include 'partial/chapter/_form.html.twig' with {chapter_form, btn_label: 'Create'}%}
+    </div>
 {% endblock %}

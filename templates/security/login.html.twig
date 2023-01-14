@@ -1,18 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form action="{{ path('app_security_login') }}" method="post">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <form action="{{ path('app_security_login') }}" method="post"  class="grid place-items-center h-screen min-w-max">
+        <div class="w-full max-w-sm">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}">
+            <div class="flex flex-col mb-3">
+                <label for="username" class="mb-1">Email:</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" class="border-1 rounded drop-shadow">
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password">
+            <div class="flex flex-col mb-3">
+                <label for="password" class="mb-1">Password:</label>
+                <input type="password" id="password" name="_password" class="border-1 rounded drop-shadow">
+            </div>
 
-        <label for="remember_me">Remember me</label>
-        <input id="remember_me" name="_remember_me" type="checkbox">
+            <div class="flex items-center mb-3 gap-1">
+                <label for="remember_me">Remember me:</label>
+                <input id="remember_me" name="_remember_me" type="checkbox">
+            </div>
 
-        <button>Login</button>
+            <div class="flex justify-center">
+                <button class="text-gray-800 border-1 rounded drop-shadow bg-blue-200 py-1 px-3.5">Login</button>
+            </div>
+        </div>
     </form>
 {% endblock %}

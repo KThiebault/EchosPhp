@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for page in pages %}
-        <div>{{ page.content }}</div>
+    {% for key, page in pages %}
+        <div class="container max-w-screen-lg mx-auto border-1 grid h-screen{{ pages|length > key + 1 ? ' mb-8' }} p-4 bg-white rounded drop-shadow">
+            {{ page.content }}
+        </div>
     {% endfor %}
 {% endblock %}

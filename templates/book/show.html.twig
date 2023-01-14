@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for chapter in chapters %}
-        <a href="{{ path('app_book_read', {book_uuid: book.uuid, chapter_uuid: chapter.uuid}) }}">{{ chapter.title }}</a>
-    {% endfor %}
+    <div class="flex gap-4 flex-wrap">
+        {% for chapter in chapters %}
+            <div class="px-4 py-2 border-1 bg-white rounded drop-shadow duration-300 hover:drop-shadow-lg">
+                <a class="font-semibold" href="{{ path('app_book_read', {book_uuid: book.uuid, chapter_uuid: chapter.uuid}) }}">
+                    {{ chapter.title }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

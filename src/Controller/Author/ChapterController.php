@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/author/book')]
 final class ChapterController extends AbstractController
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
@@ -22,8 +23,8 @@ final class ChapterController extends AbstractController
     }
 
     #[Route(
-        path: 'book/{book_uuid}/chapter',
-        name: 'app_chapter_index',
+        path: '/{book_uuid}/chapter',
+        name: 'app_author_chapter_index',
         requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: Request::METHOD_GET
     )]
@@ -42,8 +43,8 @@ final class ChapterController extends AbstractController
     }
 
     #[Route(
-        path: 'book/{book_uuid}/chapter/create',
-        name: 'app_chapter_create',
+        path: '/{book_uuid}/chapter/create',
+        name: 'app_author_chapter_create',
         requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
         methods: [Request::METHOD_GET, Request::METHOD_POST]
     )]
@@ -63,17 +64,15 @@ final class ChapterController extends AbstractController
             $this->entityManager->persist($chapter);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_chapter_index', [
-                'book_uuid' => $book->getUuid(),
-            ]);
+            return $this->redirectToRoute('app_author_chapter_index', ['book_uuid' => $book->getUuid()]);
         }
 
-        return $this->render('author/chapter/create.html.twig', ['chapter_form' => $chapterFrom->createView()]);
+        return $this->render('author/chapter/create.html.twig', ['chapter_form' => $chapterFrom]);
     }
 
     #[Route(
-        path: 'book/{book_uuid}/chapter/update/{chapter_uuid}',
-        name: 'app_chapter_update',
+        path: '/{book_uuid}/chapter/update/{chapter_uuid}',
+        name: 'app_author_chapter_update',
         requirements: [
             'book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
             'chapter_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
@@ -99,18 +98,18 @@ final class ChapterController extends AbstractController
 
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('app_chapter_update', [
+            return $this->redirectToRoute('app_author_chapter_update', [
                 'book_uuid' => $book->getUuid(),
                 'chapter_uuid' => $chapter->getUuid(),
             ]);
         }
 
-        return $this->render('author/chapter/update.html.twig', ['chapter_form' => $chapterFrom->createView()]);
+        return $this->render('author/chapter/update.html.twig', ['chapter_form' => $chapterFrom]);
     }
 
     #[Route(
-        path: 'book/{book_uuid}/chapter/delete/{chapter_uuid}',
-        name: 'app_chapter_delete',
+        path: '/{book_uuid}/chapter/delete/{chapter_uuid}',
+        name: 'app_author_chapter_delete',
         requirements: [
             'book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
             'chapter_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
@@ -132,6 +131,6 @@ final class ChapterController extends AbstractController
         $this->entityManager->remove($chapter);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_chapter_index', ['book_uuid' => $book_uuid]);
+        return $this->redirectToRoute('app_author_chapter_index', ['book_uuid' => $book_uuid]);
     }
 }

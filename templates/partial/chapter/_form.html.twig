@@ -1,0 +1,15 @@
+{{ form_start(chapter_form) }}
+    <div class="flex flex-col mb-3">
+        {{ form_label(chapter_form.title, null, {label_attr: {class: 'mb-1'}}) }}
+        {{ form_widget(chapter_form.title, {attr: {class: 'py-1 px-2 border-1 rounded drop-shadow'}}) }}
+    </div>
+
+    {% for form_page in chapter_form.pages %}
+        {{ form_widget(form_page.children.content, {attr: {class: 'container max-w-screen-lg mx-auto border-1 grid h-screen mb-3 py-1 px-2 bg-white rounded drop-shadow'}}) }}
+    {% endfor %}
+
+    <div class="flex justify-end gap-3">
+        {{ form_widget(chapter_form.addPage, {attr: {class: 'text-gray-800 border-1 rounded drop-shadow bg-blue-200 py-1 px-3.5'}}) }}
+        <button class="text-gray-800 border-1 rounded drop-shadow bg-blue-200 py-1 px-3.5">Create</button>
+    </div>
+{{ form_end(chapter_form) }}

@@ -15,11 +15,12 @@ final class ChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class)
+            ->add('title', TextType::class, ['label' => 'Title:'])
             ->add('pages', CollectionType::class, [
+                'label' => false,
                 'entry_type' => PageType::class,
-                'entry_options' => ['label' => false],
+                'entry_options' => ['label' => false]
             ])
-            ->add('addPage', SubmitType::class, ['label' => 'Add Page']);
+            ->add('addPage', SubmitType::class, ['label' => 'Add page']);
     }
 }
