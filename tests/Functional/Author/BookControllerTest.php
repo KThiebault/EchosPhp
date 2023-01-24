@@ -23,7 +23,7 @@ final class BookControllerTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/author/book');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(12, $crawler->filter('a'));
+        self::assertCount(12, $crawler->filter('main a'));
     }
 
     /**
@@ -78,7 +78,7 @@ final class BookControllerTest extends WebTestCase
      * @dataProvider provideBadBookData
      * @test
      */
-    public function shouldNotCreateBookAndDisplayGoodErrorMessage(array $bookFormData, string $errorMessage): void
+    public function shouldNotCreateBookAndDisplayErrorMessage(array $bookFormData, string $errorMessage): void
     {
         $client = self::createClient();
         $bookRepository = self::getContainer()->get(BookRepository::class);
@@ -87,9 +87,9 @@ final class BookControllerTest extends WebTestCase
         $client->request(Request::METHOD_GET, '/author/book/create');
         $client->submitForm('Create', $bookFormData);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertCount($countBook, $bookRepository->findAll());
-        self::assertSelectorTextSame('ul > li', $errorMessage);
+        self::assertSelectorTextSame('main ul > li', $errorMessage);
     }
 
     /**
@@ -104,7 +104,7 @@ final class BookControllerTest extends WebTestCase
         $client->submitForm('Delete');
         $crawler = $client->followRedirect();
 
-        self::assertCount($countBook - 1, $crawler->filter('a'));
+        self::assertCount($countBook - 1, $crawler->filter('main a'));
     }
 
     /**

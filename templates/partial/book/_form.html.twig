@@ -2,11 +2,13 @@
     <div class="flex flex-col mb-3">
         {{ form_label(book_form.title, null, {label_attr: {class: 'mb-1'}}) }}
         {{ form_widget(book_form.title, {attr: {class: 'py-1 px-2 border-1 rounded drop-shadow'}}) }}
+        {{ form_errors(book_form.title) }}
     </div>
 
     <div class="flex flex-col mb-6">
         {{ form_label(book_form.summary, null, {label_attr: {class: 'mb-1'}}) }}
         {{ form_widget(book_form.summary, {attr: {class: 'py-1 px-2 border-1 rounded drop-shadow', rows: '6'}}) }}
+        {{ form_errors(book_form.summary) }}
     </div>
 
     <div class="flex justify-end">

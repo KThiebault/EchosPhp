@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Entity\Chapter;
 use App\Entity\Page;
+use App\Entity\Tag;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,7 @@ final class BookController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         return $this->render('book/index.html.twig', [
-            'books' => $entityManager->getRepository(Book::class)->findBy([], limit: 12),
+            'tags' => $entityManager->getRepository(Tag::class)->findBy([], limit: 12),
         ]);
     }
 

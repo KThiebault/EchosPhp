@@ -86,10 +86,11 @@ final class SecurityControllerTest extends WebTestCase
     public function shouldNotRegisterDueToInvalidData(array $formData, string $message): void
     {
         $client = static::createClient();
-        $client->request('GET', '/registration');
+        $client->request(Request::METHOD_GET, '/registration');
         $client->submitForm('Register', $formData);
 
-        self::assertSelectorTextSame('ul li', $message);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertSelectorTextSame('main ul li', $message);
     }
 
     /**
