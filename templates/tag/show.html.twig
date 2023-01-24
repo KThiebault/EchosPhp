@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2 class="font-bold text-2xl text-gray-700 mb-4">{{ tag.name }}</h2>
+    <ul>
+        {% for book in tag.books %}
+            <li><a href="{{ path('app_book_show', {book_uuid: book.uuid}) }}">{{ book.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

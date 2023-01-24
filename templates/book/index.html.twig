@@ -18,7 +18,7 @@
                             </main>
                             <footer class="text-gray-500 text-sm">
                                 {% for tag in book.tags %}
-                                    <a href="">{{ tag.name }}</a>
+                                    <a href="{{ path('app_tag_show', {tag_uuid: tag.uuid}) }}">{{ tag.name }}</a>
                                 {% endfor %}
                             </footer>
                         </article>
