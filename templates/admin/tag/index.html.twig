@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <ul>
+        {% for tag in tags %}
+            <li><a href="{{ path('app_admin_tag_update', {uuid: tag.uuid}) }}">{{ tag.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

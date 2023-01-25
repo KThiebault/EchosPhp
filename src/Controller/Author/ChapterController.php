@@ -87,6 +87,7 @@ final class ChapterController extends AbstractController
         if (null === $book || null === $chapter) {
             throw $this->createNotFoundException();
         }
+
         $chapterFrom = $this->createForm(ChapterType::class, $chapter)->handleRequest($request);
 
         if ($chapterFrom->isSubmitted() && $chapterFrom->isValid()) {

@@ -31,16 +31,16 @@ final class BookController extends AbstractController
     public function create(Request $request): Response
     {
         $book = new Book();
-        $bookFrom = $this->createForm(BookType::class, $book)->handleRequest($request);
+        $bookForm = $this->createForm(BookType::class, $book)->handleRequest($request);
 
-        if ($bookFrom->isSubmitted() && $bookFrom->isValid()) {
+        if ($bookForm->isSubmitted() && $bookForm->isValid()) {
             $this->entityManager->persist($book);
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_author_book_index');
         }
 
-        return $this->render('author/book/create.html.twig', ['book_form' => $bookFrom]);
+        return $this->render('author/book/create.html.twig', ['book_form' => $bookForm]);
     }
 
     #[Route(
@@ -57,15 +57,15 @@ final class BookController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $bookFrom = $this->createForm(BookType::class, $book)->handleRequest($request);
+        $bookForm = $this->createForm(BookType::class, $book)->handleRequest($request);
 
-        if ($bookFrom->isSubmitted() && $bookFrom->isValid()) {
+        if ($bookForm->isSubmitted() && $bookForm->isValid()) {
             $this->entityManager->flush();
 
             return $this->redirectToRoute('app_author_book_update', ['uuid' => $uuid]);
         }
 
-        return $this->render('author/book/update.html.twig', ['book_form' => $bookFrom]);
+        return $this->render('author/book/update.html.twig', ['book_form' => $bookForm]);
     }
 
     #[Route(

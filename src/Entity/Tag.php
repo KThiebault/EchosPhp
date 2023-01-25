@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: TagRepository::class)]
 class Tag
@@ -28,6 +29,8 @@ class Tag
     #[CustomIdGenerator(class: UuidGenerator::class)]
     private Uuid $uuid;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 5)]
     #[Column(type: Types::STRING)]
     private string $name;
 
