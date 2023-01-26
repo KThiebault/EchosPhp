@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Uid\UuidV6;
 
 final class TagControllerTest extends WebTestCase
 {
@@ -42,7 +43,7 @@ final class TagControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $updateTagFormData
-     * @dataProvider provideGoodUpdatedTagData
+     * @dataProvider provideGoodTagData
      * @test
      */
     public function shouldUpdateTag(array $updateTagFormData): void
@@ -76,9 +77,27 @@ final class TagControllerTest extends WebTestCase
     }
 
     /**
+     * @param array<string, string> $tagFormData
+     * @dataProvider provideGoodTagData
+     * @test
+     */
+    public function shouldCreateTag(array $tagFormData): void
+    {
+        $client = self::createClient();
+        $client->request(Request::METHOD_GET, '/admin/tag/create');
+        $client->submitForm('Create', $tagFormData);
+
+        /** @var Tag $tag */
+        $tag = self::getContainer()->get(TagRepository::class)->findOneBy(['name' => $tagFormData['tag[name]']]);
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        self::assertInstanceOf(UuidV6::class, $tag->getUuid());
+    }
+
+    /**
      * @return \Generator<array<array-key, array<string, string>>>
      */
-    public function provideGoodUpdatedTagData(): \Generator
+    public function provideGoodTagData(): \Generator
     {
         yield [['tag[name]' => 'test 10']];
     }

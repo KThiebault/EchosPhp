@@ -84,7 +84,7 @@ class Book
     }
 
     /**
-     * @param Collection<int, Book> $tags
+     * @param Collection<int, Tag> $tags
      */
     public function setTags(Collection $tags): void
     {
@@ -93,7 +93,7 @@ class Book
 
     public function addTag(Tag $tag): void
     {
-        if (!$this->tags->contains($tag)) {
+        if (false === $this->tags->contains($tag)) {
             $this->tags[] = $tag;
             $tag->addBook($this);
         }

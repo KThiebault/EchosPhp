@@ -84,7 +84,7 @@ class Tag
 
     public function addBook(Book $book): void
     {
-        if (!$this->books->contains($book)) {
+        if (false === $this->books->contains($book)) {
             $this->books[] = $book;
             $book->addTag($this);
         }

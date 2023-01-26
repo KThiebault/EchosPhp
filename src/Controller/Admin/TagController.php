@@ -28,6 +28,22 @@ final class TagController extends AbstractController
         );
     }
 
+    #[Route(path: '/tag/create', name: 'app_admin_tag_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+    public function create(Request $request): Response
+    {
+        $tag = new Tag();
+        $tagForm = $this->createForm(TagType::class, $tag)->handleRequest($request);
+
+        if ($tagForm->isSubmitted() && $tagForm->isValid()) {
+            $this->entityManager->persist($tag);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_admin_tag_index');
+        }
+
+        return $this->render('admin/tag/create.html.twig', ['tag_form' => $tagForm]);
+    }
+
     #[Route(
         '/tag/update/{uuid}',
         name: 'app_admin_tag_update',
