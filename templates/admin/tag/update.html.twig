@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container max-w-screen-lg mx-auto">
+        {% include 'partial/tag/_form.html.twig' with {tag_form, btn_label: 'Update'}%}
+    </div>
+{% endblock %}

@@ -18,13 +18,13 @@ final class BookControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function shouldDisplayTwelveBooks(): void
+    public function shouldDisplaySevenTags(): void
     {
         $client = self::createClient();
         $crawler = $client->request(Request::METHOD_GET, '/book');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(12, $crawler->filter('a'));
+        self::assertCount(6, $crawler->filter('main h2'));
     }
 
     /**
@@ -40,7 +40,7 @@ final class BookControllerTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/book/'.$book->getUuid());
 
         self::assertResponseIsSuccessful();
-        self::assertCount($chapterCount, $crawler->filter('a'));
+        self::assertCount($chapterCount, $crawler->filter('article'));
     }
 
     /**

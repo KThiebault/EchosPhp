@@ -25,10 +25,10 @@ final class ChapterControllerTest extends WebTestCase
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
         $chapters = self::getContainer()->get(ChapterRepository::class)->findBy(['book' => $book->getUuid()]);
-        $crawler = $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter');
+        $crawler = $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(count($chapters), $crawler->filter('a'));
+        self::assertCount(count($chapters), $crawler->filter('main a'));
     }
 
     /**
@@ -41,7 +41,7 @@ final class ChapterControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var Book $book */
         $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/create');
+        $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter/create');
         $client->submitForm('Create', $chapterFormData);
 
         /** @var Chapter $chapter */
@@ -67,7 +67,7 @@ final class ChapterControllerTest extends WebTestCase
         /** @var Chapter $chapter */
         $chapter = self::getContainer()->get(ChapterRepository::class)->findOneBy(['title' => 'Chapter 1']);
 
-        $crawler = $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/update/'.$chapter->getUuid());
+        $crawler = $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter/update/'.$chapter->getUuid());
 
         $client->submitForm('Update', $updateChapterFormData);
 
@@ -90,8 +90,8 @@ final class ChapterControllerTest extends WebTestCase
         $chapter = $chapterRepository->findOneBy(['title' => 'Chapter 1']);
         $actualPages = count($chapter->getPages()) + 1;
 
-        $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/update/'.$chapter->getUuid());
-        $client->submitForm('Add Page');
+        $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter/update/'.$chapter->getUuid());
+        $client->submitForm('Add page');
 
         /** @var Chapter $chapter */
         $chapter = $chapterRepository->findOneBy(['title' => 'Chapter 1']);
@@ -112,13 +112,13 @@ final class ChapterControllerTest extends WebTestCase
 
         /** @var array<array-key, Chapter> $chapters */
         $chapters = $chapterRepository->findBy(['book' => $book]);
-        $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter');
+        $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter');
 
         $client->submitForm('Delete');
         $crawler = $client->followRedirect();
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        self::assertCount(count($chapters) - 1, $crawler->filter('a'));
+        self::assertCount(count($chapters) - 1, $crawler->filter('main a'));
     }
 
     /**
@@ -134,12 +134,12 @@ final class ChapterControllerTest extends WebTestCase
         $chapterRepository = self::getContainer()->get(ChapterRepository::class);
         $countChapter = count($chapterRepository->findBy(['book' => $book->getUuid()]));
 
-        $client->request(Request::METHOD_GET, 'book/'.$book->getUuid().'/chapter/create');
+        $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter/create');
         $client->submitForm('Create', $chapterFormData);
 
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertCount($countChapter, $chapterRepository->findBy(['book' => $book->getUuid()]));
-        self::assertSelectorTextSame('ul > li', $errorMessage);
+        self::assertSelectorTextSame('main ul > li', $errorMessage);
     }
 
     /**

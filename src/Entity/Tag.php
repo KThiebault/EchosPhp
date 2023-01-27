@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\BookRepository;
+use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,13 +13,15 @@ use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\InverseJoinColumn;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[Entity(repositoryClass: BookRepository::class)]
-class Book
+#[Entity(repositoryClass: TagRepository::class)]
+class Tag
 {
     #[Id]
     #[Column(type: 'uuid', unique: true)]
@@ -28,25 +30,24 @@ class Book
     private Uuid $uuid;
 
     #[Assert\NotBlank]
+    #[Assert\Length(min: 5)]
     #[Column(type: Types::STRING)]
-    private string $title;
-
-    #[Assert\Length(min: 20)]
-    #[Column(type: Types::TEXT)]
-    private string $summary;
+    private string $name;
 
     /**
-     * @var Collection<int, Tag>
+     * @var Collection<int, Book>
      */
-    #[ManyToMany(targetEntity: Tag::class, mappedBy: 'books', cascade: ['persist'])]
-    private Collection $tags;
+    #[ManyToMany(targetEntity: Book::class, inversedBy: 'tags')]
+    #[JoinColumn(name: 'book_uuid', referencedColumnName: 'uuid')]
+    #[InverseJoinColumn(name: 'tag_uuid', referencedColumnName: 'uuid')]
+    private Collection $books;
 
     #[Column(type: Types::DATE_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
     public function __construct()
     {
-        $this->tags = new ArrayCollection();
+        $this->books = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -55,47 +56,37 @@ class Book
         return $this->uuid;
     }
 
-    public function getTitle(): string
+    public function getName(): string
     {
-        return $this->title;
+        return $this->name;
     }
 
-    public function setTitle(string $title): void
+    public function setName(string $name): void
     {
-        $this->title = $title;
-    }
-
-    public function getSummary(): string
-    {
-        return $this->summary;
-    }
-
-    public function setSummary(string $summary): void
-    {
-        $this->summary = $summary;
+        $this->name = $name;
     }
 
     /**
-     * @return Collection<int, Tag>
+     * @return Collection<int, Book>
      */
-    public function getTags(): Collection
+    public function getBooks(): Collection
     {
-        return $this->tags;
+        return $this->books;
     }
 
     /**
-     * @param Collection<int, Tag> $tags
+     * @param Collection<int, Book> $books
      */
-    public function setTags(Collection $tags): void
+    public function setBooks(Collection $books): void
     {
-        $this->tags = $tags;
+        $this->books = $books;
     }
 
-    public function addTag(Tag $tag): void
+    public function addBook(Book $book): void
     {
-        if (false === $this->tags->contains($tag)) {
-            $this->tags[] = $tag;
-            $tag->addBook($this);
+        if (false === $this->books->contains($book)) {
+            $this->books[] = $book;
+            $book->addTag($this);
         }
     }
 

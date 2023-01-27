@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for tag in tags %}
+        <a href="{{ path('app_admin_tag_update', {uuid: tag.uuid}) }}">{{ tag.name }}</a>
+        <form action="{{ url('app_admin_tag_delete', {uuid: tag.uuid}) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ tag.uuid) }}" />
+            <button>Delete</button>
+        </form>
+    {% endfor %}
+{% endblock %}

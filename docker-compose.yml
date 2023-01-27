@@ -1,15 +1,27 @@
-version: "3.4"
-
 services:
-  php:
+  database:
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-echos}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+    volumes:
+      - db-data:/var/lib/postgresql/data:rw
+    ports:
+      - "5432"
+  app:
     build:
       context: .
       target: app_php
       args:
         SYMFONY_VERSION: ${SYMFONY_VERSION:-}
         STABILITY: ${STABILITY:-stable}
+    depends_on:
+      - database
     restart: unless-stopped
     volumes:
+      - ./:/srv/app
+      - ./docker/php/conf.d/app.dev.ini:/usr/local/etc/php/conf.d/app.dev.ini:ro
       - php_socket:/var/run/php
     healthcheck:
       interval: 10s
@@ -17,13 +29,14 @@ services:
       retries: 3
       start_period: 30s
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-root}@database:5432/${POSTGRES_DB:-echos}?serverVersion=${POSTGRES_VERSION:-14}
-  caddy:
+      XDEBUG_MODE: "${XDEBUG_MODE:-off}"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-root}:${POSTGRES_PASSWORD:-root}@database:5432/${POSTGRES_DB:-echos}?serverVersion=${POSTGRES_VERSION:-15}
+  web:
     build:
       context: .
       target: app_caddy
     depends_on:
-      - php
+      - app
     environment:
       SERVER_NAME: ${SERVER_NAME:-localhost, caddy:80}
     restart: unless-stopped
@@ -31,6 +44,8 @@ services:
       - php_socket:/var/run/php
       - caddy_data:/data
       - caddy_config:/config
+      - ./public:/srv/app/public:ro
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
     ports:
       # HTTP
       - target: 80
@@ -44,19 +59,6 @@ services:
       - target: 443
         published: ${HTTP3_PORT:-443}
         protocol: udp
-
-  database:
-    image: postgres:${POSTGRES_VERSION:-14}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-echos}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
-    volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-
 volumes:
   php_socket:
   caddy_data:

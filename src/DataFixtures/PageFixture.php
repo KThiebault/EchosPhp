@@ -30,8 +30,6 @@ final class PageFixture extends Fixture implements DependentFixtureInterface
 
     public function getDependencies(): array
     {
-        return [
-            ChapterFixture::class,
-        ];
+        return [ChapterFixture::class];
     }
 }
