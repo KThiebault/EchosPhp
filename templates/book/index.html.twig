@@ -3,7 +3,7 @@
 {% block body %}
     {% for tag in tags %}
         {% if tag.books|length >= 1 %}
-            <section class="mb-8 mx-4">
+            <section class="mb-6 mx-4">
                 <h2 class="font-bold text-2xl text-gray-700 mb-3">{{ tag.name }}</h2>
                 <div class="flex flex-wrap gap-4">
                     {% for book in tag.books %}

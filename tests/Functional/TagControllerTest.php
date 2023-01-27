@@ -23,6 +23,6 @@ final class TagControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextSame('h2', $tag->getName());
-        self::assertCount($tag->getBooks()->count(), $crawler->filter('main li a'));
+        self::assertCount($tag->getBooks()->count(), $crawler->filter('main article'));
     }
 }

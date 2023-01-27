@@ -1,10 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2 class="font-bold text-2xl text-gray-700 mb-4">{{ tag.name }}</h2>
-    <ul>
+    <h2 class="font-bold text-2xl text-gray-700 mb-3">{{ tag.name }}</h2>
+    <div class="flex flex-wrap gap-4">
         {% for book in tag.books %}
-            <li><a href="{{ path('app_book_show', {book_uuid: book.uuid}) }}">{{ book.title }}</a></li>
+            <article class="rounded-lg drop-shadow-lg bg-white py-3 px-4">
+                <header class="mb-2">
+                    <a href="{{ path('app_book_show', {book_uuid: book.uuid}) }}" class="font-semibold text-lg text-gray-600">
+                        {{ book.title }}
+                    </a>
+                </header>
+                <main class="mb-2">
+                    {{ book.summary }}
+                </main>
+                <footer class="text-gray-500 text-sm">
+                    {% for tag in book.tags %}
+                        <a href="{{ path('app_tag_show', {tag_uuid: tag.uuid}) }}" class="hover:underline">{{ tag.name }}</a>
+                    {% endfor %}
+                </footer>
+            </article>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock %}

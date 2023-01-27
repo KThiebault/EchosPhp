@@ -1,27 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form action="{{ path('app_security_login') }}" method="post"  class="grid place-items-center h-screen min-w-max">
-        <div class="w-full max-w-sm">
+    <form action="{{ path('app_security_login') }}" method="post"  class="grid place-items-center mt-48 min-w-max">
+        <div class="w-full max-w-sm p-9 bg-white rounded drop-shadow">
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-            <div class="flex flex-col mb-3">
-                <label for="username" class="mb-1">Email:</label>
-                <input type="text" id="username" name="_username" value="{{ last_username }}" class="border-1 rounded drop-shadow">
+            <div class="flex flex-col mb-7">
+                <label for="username" class="mb-1 text-slate-900 font-medium">Email address</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" class="border rounded border-gray-300 p-1">
             </div>
 
-            <div class="flex flex-col mb-3">
-                <label for="password" class="mb-1">Password:</label>
-                <input type="password" id="password" name="_password" class="border-1 rounded drop-shadow">
+            <div class="flex flex-col mb-5">
+                <label for="password" class="mb-1 text-slate-900 font-medium">Password</label>
+                <input type="password" id="password" name="_password" class="border rounded border-gray-300 p-1">
             </div>
 
-            <div class="flex items-center mb-3 gap-1">
-                <label for="remember_me">Remember me:</label>
+            <div class="flex items-center mb-5 gap-1">
                 <input id="remember_me" name="_remember_me" type="checkbox">
+                <label for="remember_me" class="text-slate-900 font-medium">Remember me</label>
             </div>
 
             <div class="flex justify-center">
-                <button class="text-gray-800 border-1 rounded drop-shadow bg-blue-200 py-1 px-3.5">Login</button>
+                <button class="text-slate-900 font-medium border-1 rounded drop-shadow bg-blue-200 py-1 px-3.5">Login</button>
             </div>
         </div>
     </form>
