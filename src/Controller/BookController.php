@@ -53,15 +53,35 @@ final class BookController extends AbstractController
         ],
         methods: Request::METHOD_GET
     )]
-    public function read(string $chapter_uuid, EntityManagerInterface $entityManager): Response
+    public function read(string $book_uuid, string $chapter_uuid, EntityManagerInterface $entityManager): Response
     {
-        $chapter = $entityManager->getRepository(Chapter::class)->find(['uuid' => $chapter_uuid]);
+        $book = $entityManager->getRepository(Book::class)->find(['uuid' => $book_uuid]);
+
+        if (null === $book) {
+            throw $this->createNotFoundException();
+        }
+
+        $chapter = null;
+        $nextChapter = null;
+        /** @var array<array-key, Chapter> $chapters */
+        $chapters = $entityManager->getRepository(Chapter::class)->findBy(['book' => $book->getUuid()]);
+
+        foreach ($chapters as $key => $value) {
+            if ($value->getUuid()->__toString() === $chapter_uuid) {
+                $chapter = $value;
+                $nextChapter = array_key_exists($key+1, $chapters) ? $chapters[$key+1] : null;
+            }
+        }
 
         if (null === $chapter) {
             throw $this->createNotFoundException();
         }
 
         return $this->render('book/read.html.twig', [
+            'chapters' => $chapters,
+            'next_chapter' => $nextChapter,
+            'selected_chapter' => $chapter,
+            'book_uuid' => $book->getUuid(),
             'pages' => $entityManager->getRepository(Page::class)->findBy(['chapter' => $chapter]),
         ]);
     }

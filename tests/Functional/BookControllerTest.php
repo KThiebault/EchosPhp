@@ -70,7 +70,7 @@ final class BookControllerTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapter->getUuid());
 
         self::assertResponseIsSuccessful();
-        self::assertCount($countPage, $crawler->filter('div'));
+        self::assertCount($countPage, $crawler->filter('div.container'));
     }
 
     /**
@@ -83,5 +83,58 @@ final class BookControllerTest extends WebTestCase
 
         self::expectException(NotFoundHttpException::class);
         $client->request(Request::METHOD_GET, '/book/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b/chapter/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldDisplayNextChapter(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        /** @var array<array-key, Chapter> $chapter */
+        $chapters = $client->getContainer()->get(ChapterRepository::class)->findBy(['book' => $book]);
+        $chapter = $chapters[count($chapters) - 2];
+
+        $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapter->getUuid());
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextSame(
+            'main div > a[href="/book/'.$book->getUuid().'/chapter/'.$chapters[count($chapters) - 1]->getUuid().'"]',
+            'Next chapter'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shouldDisplayAllChapters(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        /** @var array<array-key, Chapter> $chapter */
+        $chapters = $client->getContainer()->get(ChapterRepository::class)->findBy(['book' => $book]);
+
+        $crawler = $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapters[0]->getUuid());
+
+        self::assertCount(count($chapters), $crawler->filter('main div ul li'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldUnderlineSelectedChapter(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        /** @var array<array-key, Chapter> $chapter */
+        $chapters = $client->getContainer()->get(ChapterRepository::class)->findBy(['book' => $book]);
+
+        $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapters[2]->getUuid());
+
+        self::assertSelectorTextSame('main div ul li a.underline', $chapters[2]->getTitle());
     }
 }
