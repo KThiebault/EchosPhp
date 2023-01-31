@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller\Book;
 
+use App\Controller\BaseController;
 use App\Entity\History;
 use App\Entity\Tag;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/book', name: 'app_book_index', methods: Request::METHOD_GET)]
-final class IndexBookController extends AbstractController
+final class IndexBookController extends BaseController
 {
     public function __invoke(EntityManagerInterface $entityManager): Response
     {
