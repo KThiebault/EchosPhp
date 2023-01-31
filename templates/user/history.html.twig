@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="flex flex-wrap gap-4">
+        {% for history in histories %}
+            <article class="rounded-lg drop-shadow-lg bg-white py-3 px-4">
+                <header class="mb-2">
+                    <a href="{{ path('app_book_read', {book_uuid: history.book.uuid, chapter_uuid: history.chapter.uuid}) }}" class="font-semibold text-lg text-gray-600">
+                        {{ history.book.title }}
+                    </a>
+                </header>
+                <main class="mb-2">
+                    {{ history.book.summary }}
+                </main>
+                <footer class="text-gray-500 text-sm">
+                    {{ history.chapter.title }}
+                </footer>
+            </article>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -6,9 +6,13 @@ namespace App\Tests\Functional;
 
 use App\Entity\Book;
 use App\Entity\Chapter;
+use App\Entity\History;
+use App\Entity\User;
 use App\Repository\BookRepository;
 use App\Repository\ChapterRepository;
+use App\Repository\HistoryRepository;
 use App\Repository\PageRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -136,5 +140,29 @@ final class BookControllerTest extends WebTestCase
         $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapters[2]->getUuid());
 
         self::assertSelectorTextSame('main div ul li a.underline', $chapters[2]->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateHistory(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        /** @var array<array-key, Chapter> $chapters */
+        $chapters = $client->getContainer()->get(ChapterRepository::class)->findBy(['book' => $book]);
+        /** @var User $user */
+        $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user1@email.com']);
+
+        $client->loginUser($user);
+        $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapters[2]->getUuid());
+
+        /** @var History $history */
+        $history = $client->getContainer()->get(HistoryRepository::class)->findOneBy(['chapter' => $chapters[2]]);
+
+        self::assertEquals($user->getUuid(), $history->getUser()->getUuid());
+        self::assertEquals($book->getUuid(), $history->getBook()->getUuid());
+        self::assertEquals($chapters[2]->getUuid(), $history->getChapter()->getUuid());
     }
 }

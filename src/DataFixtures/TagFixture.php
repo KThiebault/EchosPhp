@@ -10,7 +10,7 @@ class TagFixture extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        for ($index = 1; $index <= 7; $index++) {
+        for ($index = 1; $index <= 7; ++$index) {
             $tag = new Tag();
             $tag->setName(sprintf('Tag %d', $index));
 

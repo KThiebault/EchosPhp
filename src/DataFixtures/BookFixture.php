@@ -21,7 +21,7 @@ final class BookFixture extends Fixture implements DependentFixtureInterface
             $book->setTitle(sprintf('Title fixture %d', $index));
             $book->setSummary(sprintf('Content fixture %s, with minimum 20 characters', $index));
 
-            if ($index % 2 === 0) {
+            if (0 === $index % 2) {
                 $book->addTag($tags[random_int(1, 6)]);
             }
 

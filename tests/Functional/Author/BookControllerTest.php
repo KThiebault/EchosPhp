@@ -40,7 +40,9 @@ final class BookControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $updateBookFormData
+     *
      * @dataProvider provideGoodUpdatedBookData
+     *
      * @test
      */
     public function shouldUpdateBook(array $updateBookFormData): void
@@ -57,7 +59,9 @@ final class BookControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $bookFormData
+     *
      * @dataProvider provideGoodBookData
+     *
      * @test
      */
     public function shouldCreateBook(array $bookFormData): void
@@ -75,7 +79,9 @@ final class BookControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $bookFormData
+     *
      * @dataProvider provideBadBookData
+     *
      * @test
      */
     public function shouldNotCreateBookAndDisplayErrorMessage(array $bookFormData, string $errorMessage): void

@@ -24,7 +24,7 @@ final class TagController extends AbstractController
     {
         return $this->render(
             'admin/tag/index.html.twig',
-            ['tags' =>  $this->entityManager->getRepository(Tag::class)->findAll()]
+            ['tags' => $this->entityManager->getRepository(Tag::class)->findAll()]
         );
     }
 

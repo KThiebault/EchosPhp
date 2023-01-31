@@ -33,7 +33,9 @@ final class ChapterControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $chapterFormData
+     *
      * @dataProvider provideGoodChapterData
+     *
      * @test
      */
     public function shouldCreateChapter(array $chapterFormData): void
@@ -56,7 +58,9 @@ final class ChapterControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $updateChapterFormData
+     *
      * @dataProvider provideGoodUpdatedBookData
+     *
      * @test
      */
     public function shouldUpdateChapter(array $updateChapterFormData): void
@@ -123,7 +127,9 @@ final class ChapterControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $chapterFormData
+     *
      * @dataProvider provideBadChapterData
+     *
      * @test
      */
     public function shouldNotCreateChapterAndDisplayGoodErrorMessage(array $chapterFormData, string $errorMessage): void
@@ -144,6 +150,7 @@ final class ChapterControllerTest extends WebTestCase
 
     /**
      * @dataProvider provideBadChapterUrl
+     *
      * @test
      */
     public function shouldThrowNotFoundExceptionIfBookIsNotFound(string $method, string $url): void

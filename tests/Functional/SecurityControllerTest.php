@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
-use Generator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +37,9 @@ final class SecurityControllerTest extends WebTestCase
 
     /**
      * @param array{_username: string, _password: string} $formData
+     *
      * @dataProvider provideInvalidData
+     *
      * @test
      */
     public function shouldNotLogin(array $formData): void
@@ -80,7 +81,9 @@ final class SecurityControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $formData
+     *
      * @dataProvider provideInvalidDataForRegistration
+     *
      * @test
      */
     public function shouldNotRegisterDueToInvalidData(array $formData, string $message): void
@@ -94,7 +97,7 @@ final class SecurityControllerTest extends WebTestCase
     }
 
     /**
-     * @return Generator<string, array<array-key, array<string, string>>>
+     * @return \Generator<string, array<array-key, array<string, string>>>
      */
     public function provideInvalidData(): iterable
     {
@@ -122,7 +125,7 @@ final class SecurityControllerTest extends WebTestCase
     /**
      * @return \Generator<array<array-key, array<string, string>|string>>
      */
-    public function provideInvalidDataForRegistration(): Generator
+    public function provideInvalidDataForRegistration(): \Generator
     {
         yield [
             [
