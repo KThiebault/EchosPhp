@@ -6,7 +6,7 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @method null|User getUser()
+ * @method User|null getUser()
  */
 abstract class BaseController extends AbstractController
 {

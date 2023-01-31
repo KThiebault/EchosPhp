@@ -5,7 +5,7 @@
         <ul>
             {% for chapter in chapters %}
                 <li class="mb-2">
-                    <a href="{{ path('app_book_read', {book_uuid, chapter_uuid: chapter.uuid}) }}" {{ selected_chapter.uuid == chapter.uuid ? 'class="underline"' : '' }}>
+                    <a href="{{ path('app_book_read', {book_uuid, chapter_uuid: chapter.uuid}) }}" {{ current_chapter.uuid == chapter.uuid ? 'class="underline"' : '' }}>
                         {{ chapter.title }}
                     </a>
                 </li>
