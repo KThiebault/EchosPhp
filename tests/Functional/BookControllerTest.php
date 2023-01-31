@@ -22,18 +22,6 @@ final class BookControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function shouldDisplaySevenTags(): void
-    {
-        $client = self::createClient();
-        $crawler = $client->request(Request::METHOD_GET, '/book');
-
-        self::assertResponseIsSuccessful();
-        self::assertCount(6, $crawler->filter('main h2'));
-    }
-
-    /**
-     * @test
-     */
     public function shouldDisplayOneBookWithThisChapters(): void
     {
         $client = self::createClient();
@@ -97,7 +85,7 @@ final class BookControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var Book $book */
         $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        /** @var array<array-key, Chapter> $chapter */
+        /** @var array<array-key, Chapter> $chapters */
         $chapters = $client->getContainer()->get(ChapterRepository::class)->findBy(['book' => $book]);
         $chapter = $chapters[count($chapters) - 2];
 
@@ -118,7 +106,7 @@ final class BookControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var Book $book */
         $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        /** @var array<array-key, Chapter> $chapter */
+        /** @var array<array-key, Chapter> $chapters */
         $chapters = $client->getContainer()->get(ChapterRepository::class)->findBy(['book' => $book]);
 
         $crawler = $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapters[0]->getUuid());
@@ -134,7 +122,7 @@ final class BookControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var Book $book */
         $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        /** @var array<array-key, Chapter> $chapter */
+        /** @var array<array-key, Chapter> $chapters */
         $chapters = $client->getContainer()->get(ChapterRepository::class)->findBy(['book' => $book]);
 
         $client->request(Request::METHOD_GET, '/book/'.$book->getUuid().'/chapter/'.$chapters[2]->getUuid());

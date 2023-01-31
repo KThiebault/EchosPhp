@@ -8,7 +8,6 @@ use App\Entity\Book;
 use App\Entity\Chapter;
 use App\Entity\History;
 use App\Entity\Page;
-use App\Entity\Tag;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,21 +18,6 @@ final class BookController extends AbstractController
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-    }
-
-    #[Route('/book', name: 'app_book_index', methods: Request::METHOD_GET)]
-    public function index(): Response
-    {
-        if (null !== $this->getUser()) {
-            $histories = $this->entityManager
-                ->getRepository(History::class)
-                ->findBy(['user' => $this->getUser()], ['uuid' => 'DESC'], limit: 5);
-        }
-
-        return $this->render('book/index.html.twig', [
-            'histories' => $histories ?? null,
-            'tags' => $this->entityManager->getRepository(Tag::class)->findBy([], limit: 12),
-        ]);
     }
 
     #[Route(
