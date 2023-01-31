@@ -2,6 +2,6 @@
 
 {% block body %}
     <div class="container max-w-screen-lg mx-auto">
-        {% include 'partial/chapter/_form.html.twig' with {chapter_form, btn_label: 'Update'}%}
+        {% include 'partial/chapter/_form.html.twig' with {chapter_form, btn_label: 'Update'} only %}
     </div>
 {% endblock %}
