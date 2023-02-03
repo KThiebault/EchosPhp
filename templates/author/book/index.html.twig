@@ -4,7 +4,7 @@
     {% for book in books %}
         <a href="{{ path('app_author_book_update', {uuid: book.uuid}) }}">{{ book.title }}</a>
 
-        <form action="{{ url('app_author_book_delete', {uuid: book.uuid}) }}" method="post">
+        <form action="{{ url('app_author_book_delete', {book_uuid: book.uuid}) }}" method="post">
             <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ book.uuid) }}" />
             <button>Delete</button>
         </form>

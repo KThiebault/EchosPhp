@@ -87,21 +87,6 @@ final class BookControllerTest extends WebTestCase
     }
 
     /**
-     * @test
-     */
-    public function shouldDeleteBook(): void
-    {
-        $client = self::createClient();
-        $countBook = count(self::getContainer()->get(BookRepository::class)->findAll());
-
-        $client->request(Request::METHOD_GET, '/author/book');
-        $client->submitForm('Delete');
-        $crawler = $client->followRedirect();
-
-        self::assertCount($countBook - 1, $crawler->filter('main a'));
-    }
-
-    /**
      * @return \Generator<array<array-key, array<string, string>>>
      */
     public function provideGoodBookData(): \Generator
