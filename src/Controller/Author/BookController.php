@@ -19,14 +19,6 @@ final class BookController extends AbstractController
     {
     }
 
-    #[Route(path: '/book', name: 'app_author_book_index', methods: Request::METHOD_GET)]
-    public function index(): Response
-    {
-        return $this->render('author/book/index.html.twig', [
-            'books' => $this->entityManager->getRepository(Book::class)->findAll(),
-        ]);
-    }
-
     #[Route(path: '/book/create', name: 'app_author_book_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function create(Request $request): Response
     {

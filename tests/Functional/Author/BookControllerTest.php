@@ -17,18 +17,6 @@ final class BookControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function shouldDisplayAllBooks(): void
-    {
-        $client = self::createClient();
-        $crawler = $client->request(Request::METHOD_GET, '/author/book');
-
-        self::assertResponseIsSuccessful();
-        self::assertCount(12, $crawler->filter('main a'));
-    }
-
-    /**
-     * @test
-     */
     public function shouldThrowNotFoundExceptionIfBookIsNotFound(): void
     {
         $client = self::createClient();
