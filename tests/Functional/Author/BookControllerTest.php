@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Uid\UuidV6;
 
 final class BookControllerTest extends WebTestCase
 {
@@ -46,60 +45,6 @@ final class BookControllerTest extends WebTestCase
     }
 
     /**
-     * @param array<string, string> $bookFormData
-     *
-     * @dataProvider provideGoodBookData
-     *
-     * @test
-     */
-    public function shouldCreateBook(array $bookFormData): void
-    {
-        $client = self::createClient();
-        $client->request(Request::METHOD_GET, '/author/book/create');
-        $client->submitForm('Create', $bookFormData);
-
-        /** @var Book $book */
-        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => $bookFormData['book[title]']]);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
-        self::assertInstanceOf(UuidV6::class, $book->getUuid());
-    }
-
-    /**
-     * @param array<string, string> $bookFormData
-     *
-     * @dataProvider provideBadBookData
-     *
-     * @test
-     */
-    public function shouldNotCreateBookAndDisplayErrorMessage(array $bookFormData, string $errorMessage): void
-    {
-        $client = self::createClient();
-        $bookRepository = self::getContainer()->get(BookRepository::class);
-        $countBook = count($bookRepository->findAll());
-
-        $client->request(Request::METHOD_GET, '/author/book/create');
-        $client->submitForm('Create', $bookFormData);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-        self::assertCount($countBook, $bookRepository->findAll());
-        self::assertSelectorTextSame('main ul > li', $errorMessage);
-    }
-
-    /**
-     * @return \Generator<array<array-key, array<string, string>>>
-     */
-    public function provideGoodBookData(): \Generator
-    {
-        yield [
-            [
-                'book[title]' => 'test',
-                'book[summary]' => 'test content with 20 characters minimum.',
-            ],
-        ];
-    }
-
-    /**
      * @return \Generator<array<array-key, array<string, string>>>
      */
     public function provideGoodUpdatedBookData(): \Generator
@@ -109,27 +54,6 @@ final class BookControllerTest extends WebTestCase
                 'book[title]' => 'test',
                 'book[summary]' => 'test content with 20 characters minimum.',
             ],
-        ];
-    }
-
-    /**
-     * @return \Generator<array<array-key, array<string, string>|string>>
-     */
-    public function provideBadBookData(): \Generator
-    {
-        yield [
-            [
-                'book[title]' => '',
-                'book[summary]' => 'test content with 20 characters minimum.',
-            ],
-            'This value should not be blank.',
-        ];
-        yield [
-            [
-                'book[title]' => 'test',
-                'book[summary]' => 'test content.',
-            ],
-            'This value is too short. It should have 20 characters or more.',
         ];
     }
 }

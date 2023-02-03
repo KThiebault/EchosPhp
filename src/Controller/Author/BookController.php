@@ -19,22 +19,6 @@ final class BookController extends AbstractController
     {
     }
 
-    #[Route(path: '/book/create', name: 'app_author_book_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
-    public function create(Request $request): Response
-    {
-        $book = new Book();
-        $bookForm = $this->createForm(BookType::class, $book)->handleRequest($request);
-
-        if ($bookForm->isSubmitted() && $bookForm->isValid()) {
-            $this->entityManager->persist($book);
-            $this->entityManager->flush();
-
-            return $this->redirectToRoute('app_author_book_index');
-        }
-
-        return $this->render('author/book/create.html.twig', ['book_form' => $bookForm]);
-    }
-
     #[Route(
         path: '/book/update/{uuid}',
         name: 'app_author_book_update',
