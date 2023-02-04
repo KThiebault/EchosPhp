@@ -87,31 +87,4 @@ final class ChapterController extends AbstractController
 
         return $this->render('author/chapter/update.html.twig', ['chapter_form' => $chapterFrom]);
     }
-
-    #[Route(
-        path: '/{book_uuid}/chapter/delete/{chapter_uuid}',
-        name: 'app_author_chapter_delete',
-        requirements: [
-            'book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
-            'chapter_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$',
-        ],
-        methods: Request::METHOD_POST
-    )]
-    public function delete(string $book_uuid, string $chapter_uuid, Request $request): Response
-    {
-        if (false === $this->isCsrfTokenValid('delete'.$chapter_uuid, (string) $request->request->get('csrf_token'))) {
-            return $this->redirectToRoute('app_chapter_index');
-        }
-
-        $chapter = $this->entityManager->getRepository(Chapter::class)->find($chapter_uuid);
-
-        if (null === $chapter) {
-            throw $this->createNotFoundException();
-        }
-
-        $this->entityManager->remove($chapter);
-        $this->entityManager->flush();
-
-        return $this->redirectToRoute('app_author_chapter_index', ['book_uuid' => $book_uuid]);
-    }
 }

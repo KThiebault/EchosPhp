@@ -90,27 +90,6 @@ final class ChapterControllerTest extends WebTestCase
     }
 
     /**
-     * @test
-     */
-    public function shouldDeleteChapter(): void
-    {
-        $client = self::createClient();
-        /** @var Book $book */
-        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        $chapterRepository = self::getContainer()->get(ChapterRepository::class);
-
-        /** @var array<array-key, Chapter> $chapters */
-        $chapters = $chapterRepository->findBy(['book' => $book]);
-        $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter');
-
-        $client->submitForm('Delete');
-        $crawler = $client->followRedirect();
-
-        self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        self::assertCount(count($chapters) - 1, $crawler->filter('main a'));
-    }
-
-    /**
      * @param array<string, string> $chapterFormData
      *
      * @dataProvider provideBadChapterData
