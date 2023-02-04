@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Author;
+namespace App\Tests\Functional\Author\Book;
 
 use App\Entity\Book;
 use App\Entity\User;

@@ -2,34 +2,29 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Author;
+namespace App\Tests\Functional\Author\Book;
 
-use App\Entity\Book;
 use App\Entity\User;
-use App\Repository\BookRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class DeleteBookControllerTest extends WebTestCase
+final class IndexBookControllerTest extends WebTestCase
 {
     /**
      * @test
      */
-    public function shouldDeleteBook(): void
+    public function shouldDisplayAllBooks(): void
     {
         $client = self::createClient();
         /** @var User $user */
         $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user1@email.com']);
         $client->loginUser($user);
-        $countBook = count(self::getContainer()->get(BookRepository::class)->findAll());
+        $crawler = $client->request(Request::METHOD_GET, '/author/book');
 
-        $client->request(Request::METHOD_GET, '/author/book');
-        $client->submitForm('Delete');
-        $crawler = $client->followRedirect();
-
-        self::assertCount($countBook - 1, $crawler->filter('main a'));
+        self::assertResponseIsSuccessful();
+        self::assertCount(12, $crawler->filter('main a'));
     }
 
     /**
@@ -38,10 +33,7 @@ final class DeleteBookControllerTest extends WebTestCase
     public function shouldRedirectToTheLoginPageIfUserIsNotLogin(): void
     {
         $client = self::createClient();
-        /** @var Book $book */
-        $book = $client->getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-
-        $client->request(Request::METHOD_POST, '/author/book/delete/'.$book->getUuid());
+        $client->request(Request::METHOD_GET, '/author/book');
 
         self::assertResponseRedirects();
         self::assertResponseStatusCodeSame(Response::HTTP_FOUND);

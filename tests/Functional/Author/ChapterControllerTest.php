@@ -17,21 +17,6 @@ use Symfony\Component\Uid\UuidV6;
 final class ChapterControllerTest extends WebTestCase
 {
     /**
-     * @test
-     */
-    public function shouldListChapterForABook(): void
-    {
-        $client = self::createClient();
-        /** @var Book $book */
-        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
-        $chapters = self::getContainer()->get(ChapterRepository::class)->findBy(['book' => $book->getUuid()]);
-        $crawler = $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter');
-
-        self::assertResponseIsSuccessful();
-        self::assertCount(count($chapters), $crawler->filter('main a'));
-    }
-
-    /**
      * @param array<string, string> $chapterFormData
      *
      * @dataProvider provideGoodChapterData
@@ -187,7 +172,6 @@ final class ChapterControllerTest extends WebTestCase
      */
     public function provideBadChapterUrl(): \Generator
     {
-        yield [Request::METHOD_GET, '/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b/chapter'];
         yield [Request::METHOD_GET, '/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b/chapter/create'];
         yield [Request::METHOD_POST, '/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b/chapter/create'];
     }

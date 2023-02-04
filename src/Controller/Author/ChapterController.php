@@ -23,26 +23,6 @@ final class ChapterController extends AbstractController
     }
 
     #[Route(
-        path: '/{book_uuid}/chapter',
-        name: 'app_author_chapter_index',
-        requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
-        methods: Request::METHOD_GET
-    )]
-    public function index(string $book_uuid): Response
-    {
-        $book = $this->entityManager->getRepository(Book::class)->find($book_uuid);
-
-        if (null === $book) {
-            throw $this->createNotFoundException();
-        }
-
-        return $this->render('author/chapter/index.html.twig', [
-            'book_uuid' => $book->getUuid(),
-            'chapters' => $this->entityManager->getRepository(Chapter::class)->findBy(['book' => $book_uuid]),
-        ]);
-    }
-
-    #[Route(
         path: '/{book_uuid}/chapter/create',
         name: 'app_author_chapter_create',
         requirements: ['book_uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
