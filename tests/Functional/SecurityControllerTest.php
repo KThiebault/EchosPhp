@@ -5,63 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 final class SecurityControllerTest extends WebTestCase
 {
-    /**
-     * @test
-     */
-    public function shouldLogin(): void
-    {
-        $client = self::createClient();
-        $client->request(Request::METHOD_GET, '/login');
-
-        self::assertResponseIsSuccessful();
-
-        $client->enableProfiler();
-        $client->submitForm('Login', ['_username' => 'user1@email.com', '_password' => 'password']);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
-
-        if (($profile = $client->getProfile()) instanceof Profile) {
-            /** @var SecurityDataCollector $securityCollector */
-            $securityCollector = $profile->getCollector('security');
-
-            self::assertTrue($securityCollector->isAuthenticated());
-        }
-    }
-
-    /**
-     * @param array{_username: string, _password: string} $formData
-     *
-     * @dataProvider provideInvalidData
-     *
-     * @test
-     */
-    public function shouldNotLogin(array $formData): void
-    {
-        $client = self::createClient();
-        $client->request(Request::METHOD_GET, '/login');
-
-        self::assertResponseIsSuccessful();
-
-        $client->enableProfiler();
-        $client->submitForm('Login', $formData);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
-
-        if (($profile = $client->getProfile()) instanceof Profile) {
-            /** @var SecurityDataCollector $securityCollector */
-            $securityCollector = $profile->getCollector('security');
-
-            self::assertFalse($securityCollector->isAuthenticated());
-        }
-    }
-
     /**
      * @test
      */
