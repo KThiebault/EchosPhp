@@ -2,25 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Security;
 
+use App\Controller\BaseController;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-final class SecurityController extends AbstractController
+#[Route('/registration', name: 'app_security_registration', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+final class RegistrationSecurityController extends BaseController
 {
-    #[Route('/registration', name: 'app_security_registration', methods: [Request::METHOD_GET, Request::METHOD_POST])]
-    public function registration(
-        Request $request,
-        UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager
-    ): Response {
+    public function __invoke(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    {
         $registrationForm = $this->createForm(RegistrationType::class)->handleRequest($request);
 
         if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
@@ -28,7 +25,7 @@ final class SecurityController extends AbstractController
             $user = $registrationForm->getData();
             /** @var string $plainPassword */
             $plainPassword = $registrationForm->get('plainPassword')->getData();
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
 
             $entityManager->persist($user);
             $entityManager->flush();

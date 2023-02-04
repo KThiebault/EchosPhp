@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional;
+namespace App\Tests\Functional\Security;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-final class SecurityControllerTest extends WebTestCase
+final class RegistrationSecurityControllerTest extends WebTestCase
 {
     /**
      * @test
@@ -42,32 +42,6 @@ final class SecurityControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         self::assertSelectorTextSame('main ul li', $message);
-    }
-
-    /**
-     * @return \Generator<string, array<array-key, array<string, string>>>
-     */
-    public function provideInvalidData(): iterable
-    {
-        yield 'wrong email' => [$this->createDataForLogin(['_username' => 'fail@email.com'])];
-        yield 'empty email' => [$this->createDataForLogin(['_username' => ''])];
-        yield 'wrong password' => [$this->createDataForLogin(['_password' => 'fail'])];
-        yield 'empty password' => [$this->createDataForLogin(['_password' => ''])];
-        yield 'empty csrf' => [$this->createDataForLogin(['_csrf_token' => ''])];
-        yield 'wrong csrf' => [$this->createDataForLogin(['_csrf_token' => 'fail'])];
-    }
-
-    /**
-     * @param array<string, string> $extraData
-     *
-     * @return array<string, string>
-     */
-    private function createDataForLogin(array $extraData): array
-    {
-        return $extraData + [
-                '_username' => 'test@email.com',
-                '_password' => 'password',
-            ];
     }
 
     /**
