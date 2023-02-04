@@ -38,10 +38,4 @@ final class SecurityController extends AbstractController
 
         return $this->render('security/registration.html.twig', ['registration_form' => $registrationForm]);
     }
-
-    #[Route('/logout', name: 'app_security_logout', methods: Request::METHOD_GET)]
-    public function logout(): Response
-    {
-        throw new \Exception('This should never be reached!');
-    }
 }
