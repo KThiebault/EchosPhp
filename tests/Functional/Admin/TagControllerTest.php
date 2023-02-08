@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Admin;
 
-use App\Entity\Book;
 use App\Entity\Tag;
 use App\Repository\BookRepository;
 use App\Repository\TagRepository;
@@ -45,7 +44,9 @@ final class TagControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $updateTagFormData
+     *
      * @dataProvider provideGoodTagData
+     *
      * @test
      */
     public function shouldUpdateTag(array $updateTagFormData): void
@@ -62,7 +63,9 @@ final class TagControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $tagFormData
+     *
      * @dataProvider provideBadTagData
+     *
      * @test
      */
     public function shouldNotUpdateTagAndDisplayErrorMessage(array $tagFormData, string $errorMessage): void
@@ -80,7 +83,9 @@ final class TagControllerTest extends WebTestCase
 
     /**
      * @param array<string, string> $tagFormData
+     *
      * @dataProvider provideGoodTagData
+     *
      * @test
      */
     public function shouldCreateTag(array $tagFormData): void
@@ -129,11 +134,11 @@ final class TagControllerTest extends WebTestCase
     {
         yield [
             ['tag[name]' => ''],
-            'This value should not be blank.'
+            'This value should not be blank.',
         ];
         yield [
             ['tag[name]' => 'test'],
-            'This value is too short. It should have 5 characters or more.'
+            'This value is too short. It should have 5 characters or more.',
         ];
     }
 }

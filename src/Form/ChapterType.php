@@ -19,7 +19,7 @@ final class ChapterType extends AbstractType
             ->add('pages', CollectionType::class, [
                 'label' => false,
                 'entry_type' => PageType::class,
-                'entry_options' => ['label' => false]
+                'entry_options' => ['label' => false],
             ])
             ->add('addPage', SubmitType::class, ['label' => 'Add page']);
     }

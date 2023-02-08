@@ -1,9 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="bg-white fixed py-5 px-10 drop-shadow border rounded-r-lg text-slate-900 font-medium">
+        <ul>
+            {% for chapter in chapters %}
+                <li class="mb-2">
+                    <a href="{{ path('app_book_read', {book_uuid, chapter_uuid: chapter.uuid}) }}" {{ current_chapter.uuid == chapter.uuid ? 'class="underline"' : '' }}>
+                        {{ chapter.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
     {% for key, page in pages %}
-        <div class="container max-w-screen-lg mx-auto border-1 grid h-screen{{ pages|length > key + 1 ? ' mb-8' }} p-4 bg-white rounded drop-shadow">
-            {{ page.content }}
+        <div class="container max-w-screen-lg mx-auto grid min-h-screen{{ pages|length > key + 1 ? ' mb-8' }} max-h-fit p-8 bg-white rounded drop-shadow">
+            {{ page.content|raw }}
         </div>
     {% endfor %}
+
+    {% if next_chapter %}
+        <div class="bg-white bottom-16 right-0 fixed py-5 px-10 drop-shadow border rounded-l-lg text-slate-900 font-medium">
+            <a href="{{ path('app_book_read', {book_uuid, chapter_uuid: next_chapter.uuid}) }}">Next chapter</a>
+        </div>
+    {% endif %}
 {% endblock %}
