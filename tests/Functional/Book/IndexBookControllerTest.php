@@ -20,7 +20,7 @@ final class IndexBookControllerTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/book');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(5, $crawler->filter('main h2'));
+        self::assertCount(6, $crawler->filter('main h2'));
     }
 
     /**
