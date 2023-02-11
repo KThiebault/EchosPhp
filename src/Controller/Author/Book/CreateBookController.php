@@ -23,6 +23,9 @@ final class CreateBookController extends BaseController
         $bookForm = $this->createForm(BookType::class, $book)->handleRequest($request);
 
         if ($bookForm->isSubmitted() && $bookForm->isValid()) {
+            // @phpstan-ignore-next-line
+            $book->setAuthor($this->getUser());
+
             $entityManager->persist($book);
             $entityManager->flush();
 

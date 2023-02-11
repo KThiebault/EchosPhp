@@ -19,7 +19,7 @@ final class IndexBookController extends BaseController
     public function __invoke(EntityManagerInterface $entityManager): Response
     {
         return $this->render('author/book/index.html.twig', [
-            'books' => $entityManager->getRepository(Book::class)->findAll(),
+            'books' => $entityManager->getRepository(Book::class)->findBy(['author' => $this->getUser()], ['createdAt' => 'DESC']),
         ]);
     }
 }

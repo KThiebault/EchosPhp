@@ -22,14 +22,15 @@ final class DeleteBookControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var User $user */
         $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user1@email.com']);
-        $client->loginUser($user);
-        $countBook = count(self::getContainer()->get(BookRepository::class)->findAll());
+        $countBook = count(self::getContainer()->get(BookRepository::class)->findBy(['author' => $user]));
 
+        $client->loginUser($user);
         $client->request(Request::METHOD_GET, '/author/book');
+
         $client->submitForm('Delete');
         $crawler = $client->followRedirect();
 
-        self::assertCount($countBook - 1, $crawler->filter('main a'));
+        self::assertCount($countBook - 1, $crawler->filter('main table a'));
     }
 
     /**

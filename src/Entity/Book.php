@@ -13,7 +13,9 @@ use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,6 +42,10 @@ class Book
      */
     #[ManyToMany(targetEntity: Tag::class, mappedBy: 'books', cascade: ['persist'])]
     private Collection $tags;
+
+    #[ManyToOne(targetEntity: User::class)]
+    #[JoinColumn(referencedColumnName: 'uuid', nullable: false, onDelete: 'cascade')]
+    private User $author;
 
     #[Column(type: Types::DATE_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
@@ -97,6 +103,16 @@ class Book
             $this->tags[] = $tag;
             $tag->addBook($this);
         }
+    }
+
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(User $author): void
+    {
+        $this->author = $author;
     }
 
     public function getCreatedAt(): \DateTimeImmutable

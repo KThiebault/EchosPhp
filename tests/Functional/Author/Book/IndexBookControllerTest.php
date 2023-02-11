@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Author\Book;
 
+use App\Entity\Book;
 use App\Entity\User;
+use App\Repository\BookRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,16 +17,19 @@ final class IndexBookControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function shouldDisplayAllBooks(): void
+    public function shouldDisplayAllUserBooks(): void
     {
         $client = self::createClient();
         /** @var User $user */
         $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user1@email.com']);
+        /** @var array<array-key, Book> $books */
+        $books = $client->getContainer()->get(BookRepository::class)->findBy(['author' => $user]);
+
         $client->loginUser($user);
         $crawler = $client->request(Request::METHOD_GET, '/author/book');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(12, $crawler->filter('main a'));
+        self::assertCount(count($books), $crawler->filter('main table a'));
     }
 
     /**
