@@ -7,35 +7,70 @@
                <h1 class="font-semibold text-2xl">Books</h1>
                <p>List of all of your books</p>
            </div>
-           <a href="{{ path('app_author_book_create') }}" class="text-slate-900 font-medium border-1 rounded drop-shadow bg-blue-200 py-2 px-3.5">Create</a>
+           <a href="{{ path('app_author_book_create') }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+               Create book
+           </a>
        </div>
-        <table class="bg-white drop-shadow-lg text-slate-900">
-            <thead class="bg-slate-100">
-                <tr>
-                    <th class="p-4 text-left font-medium">Title</th>
-                    <th class="p-4 text-left font-medium">Tags</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for book in books %}
-                <tr class="border-b">
-                    <td class="font-medium p-3">{{ book.title }}</td>
-                    <td class="p-3 text-gray-500">
-                        {% for tag in book.tags %}
-                            {{ tag.name }}
-                        {% endfor %}
-                    </td>
-                    <td class="p-3 w-fit flex gap-3 justify-end w-full">
-                        <a href="{{ path('app_author_book_update', {book_uuid: book.uuid}) }}" class="text-sky-500 font-medium">Edit</a>
-                        <form action="{{ url('app_author_book_delete', {book_uuid: book.uuid}) }}" method="post">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ book.uuid) }}" />
-                            <button class="text-red-500 font-medium">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% if books|length > 0 %}
+            <table class="bg-white drop-shadow-lg text-slate-900">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="p-4 text-left font-medium">Title</th>
+                        <th class="p-4 text-left font-medium">Tags</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for book in books %}
+                    <tr class="border-b">
+                        <td class="font-medium p-3">{{ book.title }}</td>
+                        <td class="p-3 text-gray-500">
+                            {% for key, tag in book.tags %}
+                                {{ tag.name ~ (book.tags[key + 1] is defined ? ', ' : '')}}
+                            {% endfor %}
+                        </td>
+                        <td class="p-3 w-fit flex gap-2 justify-end w-full">
+                            <a href="{{ path('app_author_book_update', {book_uuid: book.uuid}) }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Edit</a>
+                            <form action="{{ url('app_author_book_delete', {book_uuid: book.uuid}) }}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ book.uuid) }}" />
+                                <button class="text-red-700 rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot class="bg-slate-50">
+                    <tr class="border-b">
+                        <td class="p-3" colspan="2">
+                            Showing <span class="font-medium">{{ firstBook }}</span> to <span class="font-medium">{{ lastBook }}</span> of <span class="font-medium">{{ books.count }}</span> results
+                        </td>
+                        <td class="flex gap-2 justify-end p-3" colspan="1">
+                            {% if previousPage < 1 %}
+                                <span class="opacity-75 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    Previous
+                                </span>
+                            {% else %}
+                                <a href="{{ path('app_author_book_index', {p: previousPage}) }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    Previous
+                                </a>
+                            {% endif %}
+                            {% if maxPage < nextPage %}
+                                <span class="opacity-75 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    Next
+                                </span>
+                            {% else %}
+                                <a href="{{ path('app_author_book_index', {p: nextPage}) }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                    Next
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        {% else %}
+            <div class="font-semibold text-xl text-center">
+                You don't have a book yet :(
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

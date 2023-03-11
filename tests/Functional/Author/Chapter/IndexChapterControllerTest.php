@@ -34,7 +34,7 @@ final class IndexChapterControllerTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(count($chapters), $crawler->filter('main a'));
+        self::assertCount(count($chapters), $crawler->filter('main table tbody tr'));
     }
 
     /**

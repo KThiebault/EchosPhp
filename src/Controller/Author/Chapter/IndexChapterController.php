@@ -31,7 +31,7 @@ final class IndexChapterController extends BaseController
         }
 
         return $this->render('author/chapter/index.html.twig', [
-            'book_uuid' => $book->getUuid(),
+            'book' => $book,
             'chapters' => $entityManager->getRepository(Chapter::class)->findBy(['book' => $book_uuid]),
         ]);
     }

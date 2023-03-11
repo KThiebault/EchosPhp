@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\Author\Book;
 
+use App\Controller\Author\Book\IndexBookController;
 use App\Entity\Book;
 use App\Entity\User;
 use App\Repository\BookRepository;
@@ -17,19 +18,17 @@ final class IndexBookControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function shouldDisplayAllUserBooks(): void
+    public function shouldDisplayPageOneUserBooks(): void
     {
         $client = self::createClient();
         /** @var User $user */
         $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user1@email.com']);
-        /** @var array<array-key, Book> $books */
-        $books = $client->getContainer()->get(BookRepository::class)->findBy(['author' => $user]);
 
         $client->loginUser($user);
         $crawler = $client->request(Request::METHOD_GET, '/author/book');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(count($books), $crawler->filter('main table a'));
+        self::assertCount(IndexBookController::PAGE_SIZE, $crawler->filter('main table tbody tr'));
     }
 
     /**

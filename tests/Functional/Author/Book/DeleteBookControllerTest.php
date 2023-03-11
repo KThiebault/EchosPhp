@@ -28,9 +28,9 @@ final class DeleteBookControllerTest extends WebTestCase
         $client->request(Request::METHOD_GET, '/author/book');
 
         $client->submitForm('Delete');
-        $crawler = $client->followRedirect();
+        $client->followRedirect();
 
-        self::assertCount($countBook - 1, $crawler->filter('main table a'));
+        self::assertSelectorTextSame('main table tfoot span:nth-child(3)', (string)($countBook - 1));
     }
 
     /**

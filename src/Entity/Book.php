@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\InverseJoinColumn;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -40,7 +41,9 @@ class Book
     /**
      * @var Collection<int, Tag>
      */
-    #[ManyToMany(targetEntity: Tag::class, mappedBy: 'books', cascade: ['persist'])]
+    #[ManyToMany(targetEntity: Tag::class, inversedBy: 'books')]
+    #[JoinColumn(name: 'tag_uuid', referencedColumnName: 'uuid')]
+    #[InverseJoinColumn(name: 'book_uuid', referencedColumnName: 'uuid')]
     private Collection $tags;
 
     #[ManyToOne(targetEntity: User::class)]

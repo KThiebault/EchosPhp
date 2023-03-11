@@ -38,6 +38,9 @@ final class UpdateBookController extends BaseController
             return $this->redirectToRoute('app_author_book_update', ['book_uuid' => $book_uuid]);
         }
 
-        return $this->render('author/book/update.html.twig', ['book_form' => $bookForm]);
+        return $this->render('author/book/update.html.twig', [
+            'book' => $book,
+            'book_form' => $bookForm
+        ]);
     }
 }
