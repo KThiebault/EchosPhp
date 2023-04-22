@@ -16,7 +16,7 @@ final class ShowTagController extends BaseController
 {
     public function __invoke(string $tag_uuid, EntityManagerInterface $entityManager): Response
     {
-        $tag = $entityManager->getRepository(Tag::class)->find(['uuid' => $tag_uuid]);
+        $tag = $entityManager->getRepository(Tag::class)->findPublished($tag_uuid);
 
         if (null === $tag) {
             throw $this->createNotFoundException();

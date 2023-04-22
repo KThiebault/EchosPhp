@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\StateType;
 use App\Repository\BookRepository;
+use App\Type\State;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -37,6 +39,9 @@ class Book
     #[Assert\Length(min: 20)]
     #[Column(type: Types::TEXT)]
     private string $summary;
+
+    #[Column(type: StateType::STATE, length: 255, options: ['default' => State::Draft])]
+    private State $state = State::Draft;
 
     /**
      * @var Collection<int, Tag>
@@ -83,6 +88,17 @@ class Book
     {
         $this->summary = $summary;
     }
+
+    public function getState(): State
+    {
+        return $this->state;
+    }
+
+    public function setState(State $state): void
+    {
+        $this->state = $state;
+    }
+
 
     /**
      * @return Collection<int, Tag>

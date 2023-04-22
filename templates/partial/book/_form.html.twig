@@ -1,8 +1,18 @@
 {{ form_start(book_form) }}
     <div class="flex flex-col mb-3">
-        {{ form_label(book_form.title, null, {label_attr: {class: 'mb-1'}}) }}
-        {{ form_widget(book_form.title, {attr: {class: 'py-1 px-2 border-1 rounded drop-shadow'}}) }}
-        {{ form_errors(book_form.title) }}
+        <div class="flex justify-between gap-3">
+            <div class="flex items-center gap-1 grow">
+                {{ form_label(book_form.title, null, {label_attr: {class: 'mb-1'}}) }}
+                {{ form_widget(book_form.title, {attr: {class: 'py-1 px-2 border-1 rounded drop-shadow grow'}}) }}
+                {{ form_errors(book_form.title) }}
+            </div>
+
+            <div class="flex-none">
+                {{ form_label(book_form.state, null, {label_attr: {class: 'mb-1'}}) }}
+                {{ form_widget(book_form.state, {attr: {class: 'py-1 px-2 border-1 rounded drop-shadow'}}) }}
+                {{ form_errors(book_form.state) }}
+            </div>
+        </div>
     </div>
 
     <div class="flex flex-col mb-3">

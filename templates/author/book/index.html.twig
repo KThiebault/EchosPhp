@@ -16,7 +16,8 @@
                 <thead class="bg-slate-50">
                     <tr>
                         <th class="p-4 text-left font-medium">Title</th>
-                        <th class="p-4 text-left font-medium">Tags</th>
+                        <th class="p-4 text-left font-medium" colspan="8">Tags</th>
+                        <th class="p-4 text-left font-medium">State</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -24,10 +25,13 @@
                 {% for book in books %}
                     <tr class="border-b">
                         <td class="font-medium p-3">{{ book.title }}</td>
-                        <td class="p-3 text-gray-500">
+                        <td class="p-3 text-gray-500" colspan="8">
                             {% for key, tag in book.tags %}
                                 {{ tag.name ~ (book.tags[key + 1] is defined ? ', ' : '')}}
                             {% endfor %}
+                        </td>
+                        <td class="p-3 text-gray-500">
+                            {{ book.state.name }}
                         </td>
                         <td class="p-3 w-fit flex gap-2 justify-end w-full">
                             <a href="{{ path('app_author_book_update', {book_uuid: book.uuid}) }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Edit</a>
@@ -41,7 +45,7 @@
                 </tbody>
                 <tfoot class="bg-slate-50">
                     <tr class="border-b">
-                        <td class="p-3" colspan="2">
+                        <td class="p-3" colspan="10">
                             Showing <span class="font-medium">{{ firstBook }}</span> to <span class="font-medium">{{ lastBook }}</span> of <span class="font-medium">{{ books.count }}</span> results
                         </td>
                         <td class="flex gap-2 justify-end p-3" colspan="1">
