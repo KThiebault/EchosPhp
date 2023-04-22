@@ -8,6 +8,9 @@
     </head>
     <body class="bg-slate-50">
         {% include 'partial/_header.html.twig' %}
+        {% for content in app.flashes('success') %}
+            {% include 'partial/_flash.html.twig' with {content} only %}
+        {% endfor %}
         <main class="mt-6">
             {% block body %}{% endblock %}
         </main>

@@ -21,7 +21,8 @@ final class IndexBookController extends BaseController
     public function __invoke(EntityManagerInterface $entityManager, Request $request): Response
     {
         $repository = $entityManager->getRepository(Book::class);
-        $currentPage = $request->query->get('p') ?? 1;
+        /** @var int $currentPage */
+        $currentPage = $request->query->get('p', 1);
         $nextPage = $currentPage + 1;
         $previousPage = $currentPage - 1;
         $firstBook = ($currentPage - 1) * self::PAGE_SIZE;
@@ -33,7 +34,7 @@ final class IndexBookController extends BaseController
             'nextPage' => $nextPage,
             'previousPage' => $previousPage,
             'firstBook' => (($currentPage - 1) * self::PAGE_SIZE) + 1,
-            'lastBook' => ($currentPage * self::PAGE_SIZE) > $paginatedBooks->count() ? $paginatedBooks->count() : $currentPage * self::PAGE_SIZE
+            'lastBook' => ($currentPage * self::PAGE_SIZE) > $paginatedBooks->count() ? $paginatedBooks->count() : $currentPage * self::PAGE_SIZE,
         ]);
     }
 }

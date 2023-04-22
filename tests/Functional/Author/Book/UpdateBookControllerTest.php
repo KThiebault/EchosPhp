@@ -50,6 +50,9 @@ final class UpdateBookControllerTest extends WebTestCase
         $client->submitForm('Update', $updateBookFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $client->followRedirect();
+
+        self::assertSelectorTextSame('p.text-gray-500', sprintf('%s has been updated.', $updateBookFormData['book[title]']));
         self::assertNotSame($updateBookFormData['book[title]'], $book->getTitle());
     }
 

@@ -35,6 +35,7 @@ final class UpdateBookController extends BaseController
         if ($bookForm->isSubmitted() && $bookForm->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', sprintf('%s has been updated.', $book->getTitle()));
             return $this->redirectToRoute('app_author_book_update', ['book_uuid' => $book_uuid]);
         }
 
