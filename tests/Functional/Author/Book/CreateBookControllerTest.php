@@ -109,6 +109,13 @@ final class CreateBookControllerTest extends WebTestCase
         yield [
             [
                 'book[title]' => 'test',
+                'book[summary]' => '',
+            ],
+            'This value should not be blank.',
+        ];
+        yield [
+            [
+                'book[title]' => 'test',
                 'book[summary]' => 'test content.',
             ],
             'This value is too short. It should have 20 characters or more.',

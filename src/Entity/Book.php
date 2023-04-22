@@ -36,6 +36,7 @@ class Book
     #[Column(type: Types::STRING)]
     private string $title;
 
+    #[Assert\NotBlank]
     #[Assert\Length(min: 20)]
     #[Column(type: Types::TEXT)]
     private string $summary;
@@ -98,7 +99,6 @@ class Book
     {
         $this->state = $state;
     }
-
 
     /**
      * @return Collection<int, Tag>
