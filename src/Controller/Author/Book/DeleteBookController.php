@@ -6,6 +6,7 @@ namespace App\Controller\Author\Book;
 
 use App\Controller\BaseController;
 use App\Entity\Book;
+use App\Security\BookVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +33,8 @@ final class DeleteBookController extends BaseController
         if (null === $book) {
             throw $this->createNotFoundException();
         }
+
+        $this->denyAccessUnlessGranted(BookVoter::VIEW, $book);
 
         $entityManager->remove($book);
         $entityManager->flush();

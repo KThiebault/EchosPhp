@@ -20,16 +20,19 @@ final class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
+    /**
+     * @return Paginator<array-key, Book>
+     */
     public function findPaginatedBooksForAuthor(int $firstResult, int $maxResult, User $author): Paginator
     {
-        $query = $this->createQueryBuilder('b')
-            ->where('b.author = :author')
-            ->setParameter('author', $author)
-            ->orderBy('b.createdAt', 'DESC')
-            ->setFirstResult($firstResult)
-            ->setMaxResults($maxResult)
-            ->getQuery();
-
-        return new Paginator($query);
+        return new Paginator(
+            $this->createQueryBuilder('b')
+                ->where('b.author = :author')
+                ->setParameter('author', $author)
+                ->orderBy('b.createdAt', 'DESC')
+                ->setFirstResult($firstResult)
+                ->setMaxResults($maxResult)
+                ->getQuery()
+        );
     }
 }

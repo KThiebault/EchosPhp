@@ -90,6 +90,7 @@ final class CreateBookControllerTest extends WebTestCase
             [
                 'book[title]' => 'test',
                 'book[summary]' => 'test content with 20 characters minimum.',
+                'book[tags]' => ['1ede115f-3a99-6118-8ea6-39ca798e33d2'],
             ],
         ];
     }

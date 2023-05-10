@@ -7,6 +7,7 @@ namespace App\Controller\Author\Book;
 use App\Controller\BaseController;
 use App\Entity\Book;
 use App\Form\BookType;
+use App\Security\BookVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,7 @@ final class UpdateBookController extends BaseController
             throw $this->createNotFoundException();
         }
 
+        $this->denyAccessUnlessGranted(BookVoter::VIEW, $book);
         $bookForm = $this->createForm(BookType::class, $book)->handleRequest($request);
 
         if ($bookForm->isSubmitted() && $bookForm->isValid()) {
@@ -41,7 +43,7 @@ final class UpdateBookController extends BaseController
 
         return $this->render('author/book/update.html.twig', [
             'book' => $book,
-            'book_form' => $bookForm
+            'book_form' => $bookForm,
         ]);
     }
 }
