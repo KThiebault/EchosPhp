@@ -7,6 +7,7 @@ namespace App\Controller\Author\Chapter;
 use App\Controller\BaseController;
 use App\Entity\Book;
 use App\Entity\Chapter;
+use App\Security\BookVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +30,8 @@ final class IndexChapterController extends BaseController
         if (null === $book) {
             throw $this->createNotFoundException();
         }
+
+        $this->denyAccessUnlessGranted(BookVoter::VIEW, $book);
 
         return $this->render('author/chapter/index.html.twig', [
             'book' => $book,

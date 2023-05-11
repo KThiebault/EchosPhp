@@ -8,6 +8,7 @@ use App\Controller\BaseController;
 use App\Entity\Book;
 use App\Entity\Chapter;
 use App\Form\ChapterType;
+use App\Security\BookVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,8 @@ final class CreateChapterController extends BaseController
         if (null === $book) {
             throw $this->createNotFoundException();
         }
+
+        $this->denyAccessUnlessGranted(BookVoter::VIEW, $book);
 
         $chapter = new Chapter();
         $chapterFrom = $this->createForm(ChapterType::class, $chapter)->handleRequest($request);

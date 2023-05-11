@@ -9,6 +9,7 @@ use App\Entity\Book;
 use App\Entity\Chapter;
 use App\Entity\Page;
 use App\Form\ChapterType;
+use App\Security\BookVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,7 @@ final class UpdateChapterController extends BaseController
             throw $this->createNotFoundException();
         }
 
+        $this->denyAccessUnlessGranted(BookVoter::VIEW, $book);
         $chapterFrom = $this->createForm(ChapterType::class, $chapter)->handleRequest($request);
 
         if ($chapterFrom->isSubmitted() && $chapterFrom->isValid()) {

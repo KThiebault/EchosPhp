@@ -108,6 +108,25 @@ final class UpdateChapterControllerTest extends WebTestCase
     }
 
     /**
+     * @test
+     */
+    public function shouldRedirectWithForbiddenStatusCode(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+        /** @var Chapter $chapter */
+        $chapter = self::getContainer()->get(ChapterRepository::class)->findOneBy(['book' => $book]);
+
+        /** @var User $user */
+        $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user5@email.com']);
+        $client->loginUser($user);
+        $client->request(Request::METHOD_POST, '/author/book/'.$book->getUuid().'/chapter/update/'.$chapter->getUuid());
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    /**
      * @return \Generator<array<array-key, array<string, string>>>
      */
     public function provideGoodUpdatedBookData(): \Generator
