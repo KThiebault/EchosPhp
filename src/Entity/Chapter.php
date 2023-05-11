@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OrderBy;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,6 +38,7 @@ class Chapter
      * @var Collection<int, Page>
      */
     #[OneToMany(mappedBy: 'chapter', targetEntity: Page::class, cascade: ['persist'], orphanRemoval: true)]
+    #[OrderBy(['createdAt' => 'ASC'])]
     private Collection $pages;
 
     #[Assert\NotBlank]
