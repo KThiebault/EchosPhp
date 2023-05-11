@@ -47,7 +47,7 @@ class Book
     /**
      * @var Collection<int, Tag>
      */
-    #[Assert\Count(min: 1)]
+    #[Assert\Count(min: 1, max: 3)]
     #[ManyToMany(targetEntity: Tag::class, inversedBy: 'books')]
     #[JoinColumn(name: 'tag_uuid', referencedColumnName: 'uuid')]
     #[InverseJoinColumn(name: 'book_uuid', referencedColumnName: 'uuid')]
