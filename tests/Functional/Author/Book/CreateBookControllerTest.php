@@ -90,12 +90,13 @@ final class CreateBookControllerTest extends WebTestCase
             [
                 'book[title]' => 'test',
                 'book[summary]' => 'test content with 20 characters minimum.',
+                'book[tags]' => ['1ede115f-3a99-6118-8ea6-39ca798e33d2'],
             ],
         ];
     }
 
     /**
-     * @return \Generator<array<array-key, array<string, string>|string>>
+     * @return \Generator<array<array-key, array<string, string|array<array-key, string>>|string>>
      */
     public function provideBadBookData(): \Generator
     {
@@ -103,6 +104,15 @@ final class CreateBookControllerTest extends WebTestCase
             [
                 'book[title]' => '',
                 'book[summary]' => 'test content with 20 characters minimum.',
+                'book[tags]' => ['1ede115f-3a99-6118-8ea6-39ca798e33d2'],
+            ],
+            'This value should not be blank.',
+        ];
+        yield [
+            [
+                'book[title]' => 'test',
+                'book[summary]' => '',
+                'book[tags]' => ['1ede115f-3a99-6118-8ea6-39ca798e33d2'],
             ],
             'This value should not be blank.',
         ];
@@ -110,8 +120,30 @@ final class CreateBookControllerTest extends WebTestCase
             [
                 'book[title]' => 'test',
                 'book[summary]' => 'test content.',
+                'book[tags]' => ['1ede115f-3a99-6118-8ea6-39ca798e33d2'],
             ],
             'This value is too short. It should have 20 characters or more.',
+        ];
+        yield [
+            [
+                'book[title]' => 'test',
+                'book[summary]' => 'test content with 20 characters minimum.',
+                'book[tags]' => [],
+            ],
+            'This collection should contain 1 element or more.',
+        ];
+        yield [
+            [
+                'book[title]' => 'test',
+                'book[summary]' => 'test content with 20 characters minimum.',
+                'book[tags]' => [
+                    '1ede115f-3a99-6118-8ea6-39ca798e33d2',
+                    '1ede115f-3a99-6366-b649-39ca798e33d2',
+                    '1ede115f-3a99-63de-a4cf-39ca798e33d2',
+                    '1ede115f-3a99-6424-82c2-39ca798e33d2',
+                ],
+            ],
+            'This collection should contain 3 elements or less.',
         ];
     }
 

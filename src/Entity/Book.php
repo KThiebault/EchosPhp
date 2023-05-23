@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\StateType;
 use App\Repository\BookRepository;
+use App\Type\State;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,7 +15,10 @@ use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\InverseJoinColumn;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,15 +36,26 @@ class Book
     #[Column(type: Types::STRING)]
     private string $title;
 
+    #[Assert\NotBlank]
     #[Assert\Length(min: 20)]
     #[Column(type: Types::TEXT)]
     private string $summary;
 
+    #[Column(type: StateType::STATE, length: 255, options: ['default' => State::Draft])]
+    private State $state = State::Draft;
+
     /**
      * @var Collection<int, Tag>
      */
-    #[ManyToMany(targetEntity: Tag::class, mappedBy: 'books', cascade: ['persist'])]
+    #[Assert\Count(min: 1, max: 3)]
+    #[ManyToMany(targetEntity: Tag::class, inversedBy: 'books')]
+    #[JoinColumn(name: 'tag_uuid', referencedColumnName: 'uuid')]
+    #[InverseJoinColumn(name: 'book_uuid', referencedColumnName: 'uuid')]
     private Collection $tags;
+
+    #[ManyToOne(targetEntity: User::class)]
+    #[JoinColumn(referencedColumnName: 'uuid', nullable: false, onDelete: 'cascade')]
+    private User $author;
 
     #[Column(type: Types::DATE_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
@@ -75,6 +91,16 @@ class Book
         $this->summary = $summary;
     }
 
+    public function getState(): State
+    {
+        return $this->state;
+    }
+
+    public function setState(State $state): void
+    {
+        $this->state = $state;
+    }
+
     /**
      * @return Collection<int, Tag>
      */
@@ -97,6 +123,16 @@ class Book
             $this->tags[] = $tag;
             $tag->addBook($this);
         }
+    }
+
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(User $author): void
+    {
+        $this->author = $author;
     }
 
     public function getCreatedAt(): \DateTimeImmutable

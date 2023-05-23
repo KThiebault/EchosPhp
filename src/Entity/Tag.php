@@ -13,8 +13,6 @@ use Doctrine\ORM\Mapping\CustomIdGenerator;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\InverseJoinColumn;
-use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Uid\Uuid;
@@ -37,9 +35,7 @@ class Tag
     /**
      * @var Collection<int, Book>
      */
-    #[ManyToMany(targetEntity: Book::class, inversedBy: 'tags')]
-    #[JoinColumn(name: 'book_uuid', referencedColumnName: 'uuid')]
-    #[InverseJoinColumn(name: 'tag_uuid', referencedColumnName: 'uuid')]
+    #[ManyToMany(targetEntity: Book::class, mappedBy: 'tags')]
     private Collection $books;
 
     #[Column(type: Types::DATE_IMMUTABLE)]

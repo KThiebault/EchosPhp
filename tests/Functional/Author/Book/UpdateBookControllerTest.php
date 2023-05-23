@@ -40,16 +40,20 @@ final class UpdateBookControllerTest extends WebTestCase
     public function shouldUpdateBook(array $updateBookFormData): void
     {
         $client = self::createClient();
-        /** @var Book $book */
-        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
 
         /** @var User $user */
         $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user1@email.com']);
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['author' => $user]);
+
         $client->loginUser($user);
         $client->request(Request::METHOD_GET, '/author/book/update/'.$book->getUuid());
         $client->submitForm('Update', $updateBookFormData);
 
         self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $client->followRedirect();
+
+        self::assertSelectorTextSame('p.text-gray-500', sprintf('%s has been updated.', $updateBookFormData['book[title]']));
         self::assertNotSame($updateBookFormData['book[title]'], $book->getTitle());
     }
 
@@ -72,6 +76,23 @@ final class UpdateBookControllerTest extends WebTestCase
 
         self::assertEquals('/login', $client->getRequest()->getPathInfo());
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldRedirectWithForbiddenStatusCode(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+
+        /** @var User $user */
+        $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user5@email.com']);
+        $client->loginUser($user);
+        $client->request(Request::METHOD_GET, '/author/book/update/'.$book->getUuid());
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**

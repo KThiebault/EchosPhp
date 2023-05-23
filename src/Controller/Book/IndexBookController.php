@@ -7,6 +7,7 @@ namespace App\Controller\Book;
 use App\Controller\BaseController;
 use App\Entity\History;
 use App\Entity\Tag;
+use App\Type\State;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,7 @@ final class IndexBookController extends BaseController
 
         return $this->render('book/index.html.twig', [
             'histories' => $histories ?? null,
-            'tags' => $entityManager->getRepository(Tag::class)->findBy([], limit: 12),
+            'tags' => $entityManager->getRepository(Tag::class)->findAllPublished(),
         ]);
     }
 }

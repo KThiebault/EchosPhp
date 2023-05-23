@@ -36,7 +36,7 @@ final class DeleteChapterControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
-        self::assertCount(count($chapters) - 1, $crawler->filter('main a'));
+        self::assertCount(count($chapters) - 1, $crawler->filter('main table tbody tr'));
     }
 
     /**

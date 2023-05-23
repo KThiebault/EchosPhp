@@ -34,7 +34,7 @@ final class IndexChapterControllerTest extends WebTestCase
         $crawler = $client->request(Request::METHOD_GET, '/author/book/'.$book->getUuid().'/chapter');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(count($chapters), $crawler->filter('main a'));
+        self::assertCount(count($chapters), $crawler->filter('main table tbody tr'));
     }
 
     /**
@@ -69,5 +69,22 @@ final class IndexChapterControllerTest extends WebTestCase
 
         self::expectException(NotFoundHttpException::class);
         $client->request(Request::METHOD_GET, 'author/book/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b/chapter');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldRedirectWithForbiddenStatusCode(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+
+        /** @var User $user */
+        $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user5@email.com']);
+        $client->loginUser($user);
+        $client->request(Request::METHOD_GET, 'author/book/'.$book->getUuid().'/chapter');
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 }

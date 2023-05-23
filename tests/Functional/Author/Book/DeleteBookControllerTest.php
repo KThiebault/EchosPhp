@@ -22,14 +22,15 @@ final class DeleteBookControllerTest extends WebTestCase
         $client = self::createClient();
         /** @var User $user */
         $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user1@email.com']);
+        $countBook = count(self::getContainer()->get(BookRepository::class)->findBy(['author' => $user]));
+
         $client->loginUser($user);
-        $countBook = count(self::getContainer()->get(BookRepository::class)->findAll());
-
         $client->request(Request::METHOD_GET, '/author/book');
-        $client->submitForm('Delete');
-        $crawler = $client->followRedirect();
 
-        self::assertCount($countBook - 1, $crawler->filter('main a'));
+        $client->submitForm('Delete');
+        $client->followRedirect();
+
+        self::assertSelectorTextSame('main table tfoot span:nth-child(3)', (string)($countBook - 1));
     }
 
     /**
@@ -50,5 +51,22 @@ final class DeleteBookControllerTest extends WebTestCase
 
         self::assertEquals('/login', $client->getRequest()->getPathInfo());
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldRedirectWithForbiddenStatusCode(): void
+    {
+        $client = self::createClient();
+        /** @var Book $book */
+        $book = self::getContainer()->get(BookRepository::class)->findOneBy(['title' => 'Title fixture 1']);
+
+        /** @var User $user */
+        $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'user5@email.com']);
+        $client->loginUser($user);
+        $client->request(Request::METHOD_POST, '/author/book/delete/'.$book->getUuid());
+
+        self::assertResponseRedirects('/author/book');
     }
 }

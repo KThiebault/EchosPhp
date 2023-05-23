@@ -2,15 +2,25 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Echos{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-slate-50">
-        {% include 'partial/_header.html.twig' %}
+        {% if app.user %}
+            {% include 'partial/header/_login.html.twig' %}
+        {% else %}
+            {% include 'partial/header/_default.html.twig' %}
+        {% endif %}
+
+        {% for content in app.flashes('success') %}
+            {% include 'partial/_flash.html.twig' with {content} only %}
+        {% endfor %}
+
         <main class="mt-6">
             {% block body %}{% endblock %}
         </main>
+
         {% include 'partial/_footer.html.twig' %}
     </body>
 </html>

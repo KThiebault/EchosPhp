@@ -1,11 +1,45 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for chapter in chapters %}
-        <a href="{{ path('app_author_chapter_update', {'book_uuid': book_uuid, 'chapter_uuid': chapter.uuid}) }}">{{ chapter.title }}</a>
-        <form action="{{ url('app_author_chapter_delete', {'book_uuid': book_uuid, 'chapter_uuid': chapter.uuid}) }}" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ chapter.uuid) }}" />
-            <button>Delete</button>
-        </form>
-    {% endfor %}
+    <div class="container max-w-screen-lg mx-auto grid gap-6">
+        <div class="flex justify-between items-center">
+            <div class="flex flex-col gap-1">
+                <h1 class="font-semibold text-2xl">Chapters</h1>
+                <p>List of all of your chapter for {{ book.title }}</p>
+            </div>
+            <a href="{{ path('app_author_chapter_create', {book_uuid: book.uuid}) }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                Create chapter
+            </a>
+        </div>
+        {% if chapters|length > 0 %}
+            <table class="bg-white drop-shadow-lg text-slate-900">
+                <thead class="bg-slate-100">
+                <tr>
+                    <th class="p-4 text-left font-medium">Title</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for chapter in chapters %}
+                    <tr class="border-b">
+                        <td class="font-medium p-3">{{ chapter.title }}</td>
+                        <td class="p-3 w-fit flex gap-3 justify-end w-full">
+                            <a href="{{ path('app_author_chapter_update', {'book_uuid': book.uuid, 'chapter_uuid': chapter.uuid}) }}"
+                               class="font-medium">Edit</a>
+                            <form action="{{ url('app_author_chapter_delete', {book_uuid: book.uuid, 'chapter_uuid': chapter.uuid}) }}"
+                                  method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token('delete' ~ chapter.uuid) }}"/>
+                                <button class="text-red-500 font-medium">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="font-semibold text-xl text-center">
+                This book has no chapter yet :(
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

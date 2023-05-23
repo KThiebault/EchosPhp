@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container max-w-screen-lg mx-auto">
+    <div class="container max-w-screen-lg mx-auto grid gap-6">
+        <div class="flex justify-between items-center">
+            <h1 class="font-semibold text-2xl">{{ book.title }}</h1>
+            <a href="{{ path('app_author_chapter_index', {book_uuid: book.uuid}) }}" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                View all chapters
+            </a>
+        </div>
         {% include 'partial/book/_form.html.twig' with {book_form, btn_label: 'Update'} only %}
     </div>
 {% endblock %}
