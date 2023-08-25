@@ -25,6 +25,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    final public const ROLE_USER = 'ROLE_USER';
+    final public const ROLE_ADMIN = 'ROLE_ADMIN';
+    final public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+
     #[Id]
     #[Column(type: 'uuid', unique: true)]
     #[GeneratedValue(strategy: 'CUSTOM')]
@@ -43,6 +47,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Column(type: Types::STRING)]
     private string $password;
+
+    /**
+     * @var array<array-key, string>
+     */
+    #[Column(type: Types::JSON)]
+    private array $roles = [];
 
     public function getUuid(): Uuid
     {
@@ -84,7 +94,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+        $roles[] = self::ROLE_USER;
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param array<array-key, string> $roles
+     */
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     public function eraseCredentials(): void
