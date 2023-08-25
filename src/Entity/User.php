@@ -103,11 +103,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param array<array-key, string> $roles
      */
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles): void
     {
         $this->roles = $roles;
-
-        return $this;
     }
 
     public function eraseCredentials(): void
