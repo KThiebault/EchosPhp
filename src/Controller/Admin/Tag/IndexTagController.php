@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted(User::ROLE_ADMIN)]
 #[Route('admin/tag', name: 'app_admin_tag_index', methods: Request::METHOD_GET)]
-final class indexTagController extends AbstractController
+final class IndexTagController extends AbstractController
 {
     public function __invoke(Request $request, EntityManagerInterface $entityManager): Response
     {
