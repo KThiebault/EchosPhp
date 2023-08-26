@@ -29,31 +29,6 @@ final class TagController extends AbstractController
     }
 
     #[Route(
-        '/tag/update/{uuid}',
-        name: 'app_admin_tag_update',
-        requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
-        methods: [Request::METHOD_GET, Request::METHOD_POST]
-    )]
-    public function update(string $uuid, Request $request): Response
-    {
-        $tag = $this->entityManager->getRepository(Tag::class)->find($uuid);
-
-        if (null === $tag) {
-            throw $this->createNotFoundException();
-        }
-
-        $tagForm = $this->createForm(TagType::class, $tag)->handleRequest($request);
-
-        if ($tagForm->isSubmitted() && $tagForm->isValid()) {
-            $this->entityManager->flush();
-
-            return $this->redirectToRoute('app_admin_tag_update', ['uuid' => $uuid]);
-        }
-
-        return $this->render('admin/tag/update.html.twig', ['tag_form' => $tagForm]);
-    }
-
-    #[Route(
         path: '/tag/delete/{uuid}',
         name: 'app_admin_tag_delete',
         requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],

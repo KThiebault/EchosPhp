@@ -33,57 +33,6 @@ final class TagControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function shouldThrowNotFoundExceptionIfTagIsNotFound(): void
-    {
-        $client = self::createClient();
-        $client->catchExceptions(false);
-
-        self::expectException(NotFoundHttpException::class);
-        $client->request(Request::METHOD_GET, '/admin/tag/update/1ed22f9f-8793-6c00-ad9e-1d77bf6a790b');
-    }
-
-    /**
-     * @param array<string, string> $updateTagFormData
-     *
-     * @dataProvider provideGoodTagData
-     *
-     * @test
-     */
-    public function shouldUpdateTag(array $updateTagFormData): void
-    {
-        $client = self::createClient();
-        /** @var Tag $tag */
-        $tag = self::getContainer()->get(TagRepository::class)->findOneBy(['name' => 'Tag 2']);
-        $client->request(Request::METHOD_GET, '/admin/tag/update/'.$tag->getUuid());
-        $client->submitForm('Update', $updateTagFormData);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_FOUND);
-        self::assertNotSame($updateTagFormData['tag[name]'], $tag->getName());
-    }
-
-    /**
-     * @param array<string, string> $tagFormData
-     *
-     * @dataProvider provideBadTagData
-     *
-     * @test
-     */
-    public function shouldNotUpdateTagAndDisplayErrorMessage(array $tagFormData, string $errorMessage): void
-    {
-        $client = self::createClient();
-        /** @var Tag $tag */
-        $tag = self::getContainer()->get(TagRepository::class)->findOneBy(['name' => 'Tag 2']);
-
-        $client->request(Request::METHOD_GET, '/admin/tag/update/'.$tag->getUuid());
-        $client->submitForm('Update', $tagFormData);
-
-        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
-        self::assertSelectorTextSame('main ul > li', $errorMessage);
-    }
-
-    /**
-     * @test
-     */
     public function shouldDeleteTagButNotBook(): void
     {
         $client = self::createClient();
