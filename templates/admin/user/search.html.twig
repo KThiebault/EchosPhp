@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container max-w-screen-lg mx-auto">
+        {{ form_start(search_form) }}
+            <div class="flex flex-col mb-3">
+                {{ form_row(search_form.pseudo, {attr: {class: 'py-1 px-2 border-1 rounded drop-shadow'}}) }}
+            </div>
+
+            <div class="flex justify-end">
+                <button class="text-gray-800 border-1 rounded drop-shadow bg-blue-200 py-1 px-3.5">Search</button>
+            </div>
+        {{ form_end(search_form) }}
+    </div>
+{% endblock %}
