@@ -40,6 +40,31 @@ final class CreateTagControllerTest extends WebTestCase
     }
 
     /**
+     * @param array<string, string> $tagFormData
+     *
+     * @dataProvider provideBadTagData
+     *
+     * @test
+     */
+    public function shouldNotCreateTagAndDisplayErrorMessage(array $tagFormData, string $errorMessage): void
+    {
+        $client = self::createClient();
+        $tagRepository = self::getContainer()->get(TagRepository::class);
+        $tagBook = count($tagRepository->findAll());
+
+        /** @var User $user */
+        $user = $client->getContainer()->get(UserRepository::class)->findOneBy(['email' => 'admin1@email.com']);
+        $client->loginUser($user);
+
+        $client->request(Request::METHOD_GET, '/admin/tag/create');
+        $client->submitForm('Create', $tagFormData);
+
+        self::assertCount($tagBook, $tagRepository->findAll());
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertSelectorTextSame('main form ul > li', $errorMessage);
+    }
+
+    /**
      * @test
      *
      * @dataProvider provideHttpMethod
@@ -96,5 +121,15 @@ final class CreateTagControllerTest extends WebTestCase
     {
         yield [Request::METHOD_GET];
         yield [Request::METHOD_POST];
+    }
+
+    /**
+     * @return \Generator<array<array-key, array<string, string|array<array-key, string>>|string>>
+     */
+    public function provideBadTagData(): \Generator
+    {
+        yield [['tag[name]' => 'Tag 1'], 'This value is already used.'];
+        yield [['tag[name]' => ''], 'This value should not be blank.'];
+        yield [['tag[name]' => 'tag'], 'This value is too short. It should have 5 characters or more.'];
     }
 }
