@@ -6,13 +6,14 @@ namespace App\Controller\Author\Book;
 
 use App\Controller\BaseController;
 use App\Entity\Book;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER')]
+#[IsGranted(User::ROLE_USER)]
 #[Route('/author/book', name: 'app_author_book_index', methods: Request::METHOD_GET)]
 final class IndexBookController extends BaseController
 {

@@ -7,6 +7,7 @@ namespace App\Controller\Author\Chapter;
 use App\Controller\BaseController;
 use App\Entity\Book;
 use App\Entity\Chapter;
+use App\Entity\User;
 use App\Security\BookVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER')]
+#[IsGranted(User::ROLE_USER)]
 #[Route(
     path: '/author/book/{book_uuid}/chapter',
     name: 'app_author_chapter_index',

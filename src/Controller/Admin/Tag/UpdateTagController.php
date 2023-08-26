@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Tag;
 
+use App\Controller\BaseController;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Form\TagType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,10 +18,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(
     'admin/tag/update/{uuid}',
     name: 'app_admin_tag_update',
-    requirements: ['uuid' => '^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$'],
+    requirements: ['uuid' => self::UUID_REGEX],
     methods: [Request::METHOD_GET, Request::METHOD_POST]
 )]
-final class UpdateTagController extends AbstractController
+final class UpdateTagController extends BaseController
 {
     public function __invoke(string $uuid, Request $request, EntityManagerInterface $entityManager): Response
     {

@@ -6,6 +6,7 @@ namespace App\Controller\Author\Book;
 
 use App\Controller\BaseController;
 use App\Entity\Book;
+use App\Entity\User;
 use App\Form\BookType;
 use App\Security\BookVoter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER')]
+#[IsGranted(User::ROLE_USER)]
 #[Route(
     'author/book/update/{book_uuid}',
     name: 'app_author_book_update',

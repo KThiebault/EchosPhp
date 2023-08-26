@@ -6,13 +6,14 @@ namespace App\Controller\Author\Chapter;
 
 use App\Controller\BaseController;
 use App\Entity\Chapter;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER')]
+#[IsGranted(User::ROLE_USER)]
 #[Route(
     path: '/author/book/{book_uuid}/chapter/delete/{chapter_uuid}',
     name: 'app_author_chapter_delete',
