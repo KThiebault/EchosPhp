@@ -3,22 +3,22 @@
 {% block body %}
     {% for key, tag in tags %}
         {% if key == 2 and histories is not empty %}
-            <section class="mb-6 mx-4">
-                <h3 class="font-bold text-2xl text-gray-700 mb-3">Last reading</h3>
-                <div class="flex flex-wrap gap-4">
+            <section>
+                <h3>Last reading</h3>
+                <div>
                     {% for history in histories %}
-                        <article class="rounded-lg drop-shadow-lg bg-white py-3 px-4">
-                            <header class="mb-2">
-                                <a href="{{ path('app_book_read', {book_uuid: history.book.uuid, chapter_uuid: history.chapter.uuid}) }}" class="font-semibold text-lg text-gray-600">
+                        <article>
+                            <header>
+                                <a href="{{ path('app_book_read', {book_uuid: history.book.uuid, chapter_uuid: history.chapter.uuid}) }}">
                                     {{ history.book.title }}
                                 </a>
                             </header>
-                            <main class="mb-2">
+                            <main>
                                 {{ history.book.summary }}
                             </main>
-                            <footer class="text-gray-500 text-sm">
+                            <footer>
                                 {% for tag in history.book.tags %}
-                                    <a href="{{ path('app_tag_show', {tag_uuid: tag.uuid}) }}" class="hover:underline">{{ tag.name }}</a>
+                                    <a href="{{ path('app_tag_show', {tag_uuid: tag.uuid}) }}">{{ tag.name }}</a>
                                 {% endfor %}
                             </footer>
                         </article>
@@ -27,22 +27,22 @@
             </section>
         {% endif %}
         {% if tag.books|length >= 1 %}
-            <section class="mb-6 mx-4">
-                <h2 class="font-bold text-2xl text-gray-700 mb-3">{{ tag.name }}</h2>
-                <div class="flex flex-wrap gap-4">
+            <section>
+                <h2>{{ tag.name }}</h2>
+                <div>
                     {% for book in tag.books %}
-                        <article class="rounded-lg drop-shadow-lg bg-white py-3 px-4">
-                            <header class="mb-2">
-                                <a href="{{ path('app_book_show', {book_uuid: book.uuid}) }}" class="font-semibold text-lg text-gray-600">
+                        <article>
+                            <header>
+                                <a href="{{ path('app_book_show', {book_uuid: book.uuid}) }}">
                                     {{ book.title }}
                                 </a>
                             </header>
-                            <main class="mb-2">
+                            <main>
                                 {{ book.summary }}
                             </main>
-                            <footer class="text-gray-500 text-sm">
+                            <footer>
                                 {% for tag in book.tags %}
-                                    <a href="{{ path('app_tag_show', {tag_uuid: tag.uuid}) }}" class="hover:underline">{{ tag.name }}</a>
+                                    <a href="{{ path('app_tag_show', {tag_uuid: tag.uuid}) }}">{{ tag.name }}</a>
                                 {% endfor %}
                             </footer>
                         </article>

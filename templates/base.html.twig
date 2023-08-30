@@ -4,9 +4,10 @@
         <meta charset="UTF-8">
         <title>{% block title %}Echos{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="module" src="http://localhost:3000/@vite/client"></script>
+        <script rel="preload" type="module" src="http://localhost:3000/assets/main.js" defer></script>
     </head>
-    <body class="bg-slate-50">
+    <body>
         {% if app.user %}
             {% include 'partial/header/_login.html.twig' %}
         {% else %}
@@ -17,7 +18,7 @@
             {% include 'partial/_flash.html.twig' with {content} only %}
         {% endfor %}
 
-        <main class="mt-6">
+        <main>
             {% block body %}{% endblock %}
         </main>
 
