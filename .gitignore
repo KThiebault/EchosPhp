@@ -1,6 +1,7 @@
 ###> ide ###
 .idea
 ###< ide ###
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -20,3 +21,11 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> vite/dependencies ###
+/node_modules/
+###< vite/dependencies ###
+
+###> build/assets ###
+/public/assets/
+###< build/assets ###

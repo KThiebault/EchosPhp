@@ -4,7 +4,7 @@ FROM composer/composer:2-bin AS composer
 FROM mlocati/php-extension-installer:latest AS php_extension_installer
 
 # Prod image
-FROM php:8.2-fpm-alpine AS app_php
+FROM php:8.2-fpm-alpine AS app_composer
 
 # Allow to use development versions of Symfony
 ARG STABILITY="stable"
@@ -91,6 +91,25 @@ RUN set -eux; \
 RUN rm "$PHP_INI_DIR/conf.d/app.prod.ini"; \
 	mv "$PHP_INI_DIR/php.ini" "$PHP_INI_DIR/php.ini-production"; \
 	mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
+# Node stage
+FROM node:18-alpine AS symfony_node
+
+COPY --link --from=app_composer /srv/app/package*.json /app/
+COPY --link --from=app_composer /srv/app/vendor /app/vendor
+
+WORKDIR /app
+
+RUN npm install --force
+
+COPY --link --from=app_composer /srv/app/assets /app/assets
+COPY --link --from=app_composer /srv/app/vite.config.js /app/
+
+RUN npm run build
+
+FROM app_composer as app_php
+
+COPY --from=symfony_node --link /app/public/assets /srv/app/public/assets
 
 # Caddy image
 FROM caddy:2.6.2-alpine AS app_caddy

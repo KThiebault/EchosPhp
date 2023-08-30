@@ -61,6 +61,15 @@ services:
       - target: 443
         published: ${HTTP3_PORT:-443}
         protocol: udp
+  node:
+    build:
+      context: .
+      target: symfony_node
+    volumes:
+      - ./:/app
+    ports:
+      - 3000:3000
+    command: 'sh -c "npm install; npm run dev"'
 volumes:
   php_socket:
   caddy_data:
